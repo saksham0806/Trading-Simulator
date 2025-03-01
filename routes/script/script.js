@@ -1,11 +1,12 @@
 
 // let apikey = "YPPADQPA2XTWLZXE";
 let apikey = "S9THLB3PV4TUWGPA";
-console.log("hello");
+console.log("Script Running");
 let symbols = ["IBM","NVDA","GOOG","TATAMOTORS","META","AMD","INTC","MSFT","AMZN","AAPL","TSLA"];
 
 
 async function fetchPrice(symbol){
+    console.log("fetching Prices")
     let api = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=demo`);
     // let api = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=5min&apikey=${apikey}`);
     let result = await api.json();
@@ -14,25 +15,24 @@ async function fetchPrice(symbol){
 
 async function addSymbol(symbol){
 
-    let prices = await fetchPrice(symbol);
-    let currprice = [];
+    let stockPrices = await fetchPrice(symbol);
+    let prices = [];
     let times = [];
-    for (const timestamp in prices) {
-        if (prices.hasOwnProperty(timestamp)) {
+    for (const timestamp in stockPrices) {
+        if (stockPrices.hasOwnProperty(timestamp)) {
             times.push(timestamp);
-            currprice.push(parseFloat(prices[timestamp]["4. close"]));
+            prices.push(parseFloat(stockPrices[timestamp]["4. close"]));
         }
     }
-
-
+    let currPrice = prices[0];
+    
     times.reverse();
-    currprice.reverse();
-    console.log(times)
-    console.log(currprice);
+    prices.reverse();
+    console.log(currPrice);
 
 
     let div = document.createElement("div");
-    div.innerHTML = `${currprice}
+    div.innerHTML = `${currPrice}
     `;
     document.querySelector(".pricesContainer").appendChild(div);
 
@@ -42,30 +42,29 @@ async function addSymbol(symbol){
         data: {
             labels: times,
             datasets: [{
-                label: 'Stock Close Price',
-                data: currprice,
+                // label: 'Stock Close Price',
+                data: prices,
                 borderColor: 'blue',
                 backgroundColor: 'rgba(0, 0, 255, 0.2)',
                 borderWidth: 2,
-                pointRadius: 4,
-                pointBackgroundColor: 'red'
+                // pointRadius: 4,
+                // pointBackgroundColor: 'red'
             }]
         },
         options: {
             responsive: true,
             scales: {
                 x: {
-                    title: { display: true, text: 'Time' },
+                    title: { display: false, text: 'Time' },
                     ticks: { autoSkip: true, maxTicksLimit: 5 }
                 },
                 y: {
-                    title: { display: true, text: 'Close Price' }
+                    title: { display: false, text: 'Close Price' }
                 }
             }
         }
     });
 
-
 }
 
-addSymbol("AMD");
+addSymbol("IBM")
