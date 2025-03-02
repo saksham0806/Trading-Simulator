@@ -47,7 +47,7 @@ async function addSymbol(symbol){
                 borderColor: 'blue',
                 backgroundColor: 'rgba(0, 0, 255, 0.2)',
                 borderWidth: 2,
-                // pointRadius: 4,
+                pointRadius: 0,
                 // pointBackgroundColor: 'red'
             }]
         },
