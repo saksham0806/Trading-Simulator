@@ -2,10 +2,10 @@
 // let apikey = "YPPADQPA2XTWLZXE";
 let apikey = "S9THLB3PV4TUWGPA";
 console.log("Script Running");
-let symbols = ["IBM","NVDA","GOOG","TATAMOTORS","META","AMD","INTC","MSFT","AMZN","AAPL","TSLA"];
+let symbols = ["IBM", "NVDA", "GOOG", "TATAMOTORS", "META", "AMD", "INTC", "MSFT", "AMZN", "AAPL", "TSLA"];
 
 
-async function fetchPrice(symbol){
+async function fetchPrice(symbol) {
     console.log("fetching Prices")
     let api = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=demo`);
     // let api = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=5min&apikey=${apikey}`);
@@ -13,7 +13,7 @@ async function fetchPrice(symbol){
     return result["Time Series (5min)"];
 }
 
-async function addSymbol(symbol){
+async function addSymbol(symbol) {
 
     let stockPrices = await fetchPrice(symbol);
     let prices = [];
@@ -25,7 +25,7 @@ async function addSymbol(symbol){
         }
     }
     let currPrice = prices[0];
-    
+
     times.reverse();
     prices.reverse();
     console.log(currPrice);
@@ -42,24 +42,55 @@ async function addSymbol(symbol){
         data: {
             labels: times,
             datasets: [{
-                // label: 'Stock Close Price',
                 data: prices,
                 borderColor: 'blue',
                 backgroundColor: 'rgba(0, 0, 255, 0.2)',
                 borderWidth: 2,
                 pointRadius: 0,
-                // pointBackgroundColor: 'red'
             }]
         },
         options: {
-            responsive: true,
+            responsive: false,
+            maintainAspectRatio: false,
             scales: {
                 x: {
-                    title: { display: false, text: 'Time' },
-                    ticks: { autoSkip: true, maxTicksLimit: 5 }
+                    display: true,
+                    grid: {
+                        display: true,
+                        drawBorder: false,
+                    },
+                    ticks: {
+                        display: false,
+                        autoSkip: true,
+                        maxTicksLimit: 5,
+                    },
+                    title: {
+                        display: false,
+                    }
                 },
                 y: {
-                    title: { display: false, text: 'Close Price' }
+                    display: true,
+                    grid: {
+                        display: true,
+                        drawBorder: false,
+                    },
+                    ticks: {
+                        display: false,
+                        stepSize: 50,
+                    },
+                    title: {
+                        display: false,
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            elements: {
+                line: {
+                    tension: 0
                 }
             }
         }
