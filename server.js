@@ -22,8 +22,8 @@ app.get('/signinup', (req, res) => {
 app.get('/dashboard', (req, res) => {
     res.sendFile(`${__dirname}/routes/dashboard.html`);
 })
-app.get('/test', (req, res) => {
-    res.sendFile(`${__dirname}/routes/test.html`);
+app.get('/stock', (req, res) => {
+    res.sendFile(`${__dirname}/routes/stock.html`);
 })
 
 app.listen(port, () => {

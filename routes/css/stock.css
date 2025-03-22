@@ -1,0 +1,99 @@
+* {
+    margin: 0;
+    padding: 0;
+    background-color: #EEE5DA;
+}
+
+header {
+    background-color: #262424;
+    color: #fff;
+    padding: 20px;
+}
+
+header * {
+    background-color: #262424;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+header nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+header nav ul li {
+    margin-left: 20px;
+}
+
+header nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+header nav ul li a.btn {
+    background-color: #28a745;
+    padding: 8px 16px;
+    border-radius: 4px;
+}
+
+header nav ul li a.btn:hover {
+    background-color: #218838;
+}
+
+.stockGraphCSS {
+    width: 800px;
+    height: 400px;
+
+}
+
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pricesnumbercontainer {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.currentPrice {
+    font-size: 30px;
+}
+
+.changeInPrices {
+    font-size: 20px;
+}
+
+
+footer {
+    background-color: #262424;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+    position: fixed;
+    width: 100%;
+    bottom: 0px;
+}
+
+footer *{
+    background-color: #262424;
+}
+
+footer p {
+    margin: 0;
+}

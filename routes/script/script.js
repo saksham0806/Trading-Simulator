@@ -14,7 +14,8 @@ async function fetchPrice(symbol) {
 }
 
 async function addSymbol(symbol) {
-
+    let linecolor = "";
+    
     let stockPrices = await fetchPrice(symbol);
     let prices = [];
     let times = [];
@@ -25,17 +26,48 @@ async function addSymbol(symbol) {
         }
     }
     let currPrice = prices[0];
-
+    
     times.reverse();
     prices.reverse();
     console.log(currPrice);
-
-
+    
+    if(prices[prices.length-1]>prices[0]){
+        linecolor = "rgb(129, 201, 149)";
+    }
+    else{
+        linecolor = "rgb(242, 139, 130)";
+    }
+    
+    let symbolName = document.createElement("div");
+    symbolName.innerHTML = symbol;
+    symbolName.style.fontSize = '30px';
+    
     let div = document.createElement("div");
-    div.innerHTML = `${currPrice}
+    div.className = "pricesnumbercontainer";
+    let current = document.createElement("div");
+    current.className = "currentPrice"
+    current.innerHTML = `${currPrice}
     `;
-    document.querySelector(".pricesContainer").appendChild(div);
-
+    let change = document.createElement("div");
+    change.className = "changeInPrices";
+    let changepercentage = prices[prices.length-1]/prices[0];
+    if(changepercentage<1){
+        changepercentage = (1-changepercentage)*100;
+        change.style.color = "rgb(242, 139, 130)";
+    }
+    else{
+        changepercentage = (changepercentage-1)*100;
+        change.style.color = "rgb(129, 201, 149)";
+    }
+    changepercentage = Math.round(changepercentage*100)/100;
+    changedifference = Math.round(Math.abs(prices[prices.length-1]-prices[0])*100)/100;
+    change.innerHTML = changedifference+" ("+changepercentage+"%)";
+    div.append(current);
+    div.append(change);
+    
+    document.querySelector(".pricesContainer").prepend(div);
+    document.querySelector(".pricesContainer").prepend(symbolName);
+    
     const ctx = document.getElementById('stockChart').getContext('2d');
     new Chart(ctx, {
         type: 'line',
@@ -43,8 +75,8 @@ async function addSymbol(symbol) {
             labels: times,
             datasets: [{
                 data: prices,
-                borderColor: 'blue',
-                backgroundColor: 'rgba(0, 0, 255, 0.2)',
+                borderColor: linecolor,
+                backgroundColor: linecolor,
                 borderWidth: 2,
                 pointRadius: 0,
             }]
