@@ -1,3 +1,6 @@
+//highest lowest
+
+
 
 // let apikey = "YPPADQPA2XTWLZXE";
 let apikey = "S9THLB3PV4TUWGPA";
@@ -12,6 +15,7 @@ async function fetchPrice(symbol) {
     let result = await api.json();
     return result["Time Series (5min)"];
 }
+
 
 async function addSymbol(symbol) {
     let linecolor = "";
@@ -37,10 +41,50 @@ async function addSymbol(symbol) {
     else{
         linecolor = "rgb(242, 139, 130)";
     }
+    prices1 = prices.slice(0,12);
+    let maxPrice24 = prices[0];
+    let minPrice24 = prices[0];
+
+    prices.forEach(i => {
+        if(i>maxPrice24){
+            maxPrice24 = i;
+        }
+        if(i<minPrice24){
+            minPrice24 = i;
+        }
+    });
+    maxPrice24 = Math.round(maxPrice24*100)/100;
+    minPrice24 = Math.round(minPrice24*100)/100;
     
+    let maxprice1 = prices[0];
+    let minprice1 = prices[0];
+
+    prices1.forEach(i => {
+        if(i>maxprice1){
+            maxprice1 = i;
+        }
+        if(i<minprice1){
+            minprice1 = i;
+        }
+    });
+    maxprice1 = Math.round(maxprice1*100)/100;
+    minprice1 = Math.round(minprice1*100)/100;
+
+    let maxprices1 = prices1[0];
+    let minprices1 = prices1[0];
+    prices1.forEach(i => {
+        if(i>maxprice1){
+            maxprice1 = i;
+        }
+        if(i<minprice1){
+            minprice1 = i;
+        }
+    });
+
+
     let symbolName = document.createElement("div");
     symbolName.innerHTML = symbol;
-    symbolName.style.fontSize = '30px';
+    symbolName.style.fontSize = '60px';
     
     let div = document.createElement("div");
     div.className = "pricesnumbercontainer";
@@ -64,10 +108,38 @@ async function addSymbol(symbol) {
     change.innerHTML = changedifference+" ("+changepercentage+"%)";
     div.append(current);
     div.append(change);
+    let maxdiv = document.createElement("div");
+    let mindiv = document.createElement("div");
+    let timeheader = document.createElement("div");
+    timeheader.className = "timeheader";
+    timeheader.innerHTML = "from last 24 hours";
+    maxdiv.className = "minmax maxdiv";
+    mindiv.className = "minmax mindiv";
+    maxdiv.innerHTML = `Max Price - ${maxPrice24}`;
+    mindiv.innerHTML = `Min Price - ${minPrice24}`;
+
+    let maxdiv1 = document.createElement("div");
+    let mindiv1 = document.createElement("div");
+    let timeheader1 = document.createElement("div");
+    timeheader1.className = "timeheader";
+    timeheader1.innerHTML = "from last 1 hours"
+    maxdiv1.className = "minmax maxdiv";
+    mindiv1.className = "minmax mindiv";
+    maxdiv1.innerHTML = `Max Price - ${maxprice1}`;
+    mindiv1.innerHTML = `Min Price - ${minprice1}`;
+
     
     document.querySelector(".pricesContainer").prepend(div);
     document.querySelector(".pricesContainer").prepend(symbolName);
+    document.querySelector(".pricesContainer").append(timeheader);
+    document.querySelector(".pricesContainer").append(maxdiv);
+    document.querySelector(".pricesContainer").append(mindiv);
+    document.querySelector(".pricesContainer").append(timeheader1);
+    document.querySelector(".pricesContainer").append(maxdiv1);
+    document.querySelector(".pricesContainer").append(mindiv1);
     
+
+
     const ctx = document.getElementById('stockChart').getContext('2d');
     new Chart(ctx, {
         type: 'line',
