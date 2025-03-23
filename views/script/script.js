@@ -3,8 +3,8 @@
 let apikey = "S9THLB3PV4TUWGPA";
 console.log("Script Running");
 let symbols = ["IBM", "NVDA", "GOOG", "TATAMOTORS", "META", "AMD", "INTC", "MSFT", "AMZN", "AAPL", "TSLA"];
-
-
+// var accesspoint = <%= gameState %>;
+console.log(stock_name);
 async function fetchPrice(symbol) {
     console.log("fetching Prices")
     let api = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=demo`);
@@ -130,4 +130,4 @@ async function addSymbol(symbol) {
 
 }
 
-addSymbol("IBM")
+addSymbol(stock_name);
