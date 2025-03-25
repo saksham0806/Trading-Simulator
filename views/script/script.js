@@ -1,12 +1,10 @@
 //highest lowest
 
-
-
 // let apikey = "YPPADQPA2XTWLZXE";
 let apikey = "S9THLB3PV4TUWGPA";
 console.log("Script Running");
 let symbols = ["IBM", "NVDA", "GOOG", "TATAMOTORS", "META", "AMD", "INTC", "MSFT", "AMZN", "AAPL", "TSLA"];
-// var accesspoint = <%= gameState %>;
+
 console.log(stock_name);
 async function fetchPrice(symbol) {
     console.log("fetching Prices")
