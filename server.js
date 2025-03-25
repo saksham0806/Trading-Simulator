@@ -8,7 +8,7 @@ const db = new pg.Client({
   user: "postgres",
   host: "localhost",
   database: "secrets",
-  password: "Pota4567#",
+  password: "",
   port: 5432,
 });
 db.connect();
@@ -50,22 +50,22 @@ app.get('/register', (req, res) => {
 
 app.get('/dashboard', (req, res) => {
     res.sendFile(`${__dirname}/routes/dashboard.html`);
-})
-app.get('/stock/:stockname', (req, res) => {
-  res.render(`${__dirname}/views/stock.ejs`, {name:req.params.stockname});
-})
-
-
-app.post("/register", async (req, res) => {
-  const email = req.body.username;
-  const password = req.body.password;
-  console.log(email);
-  console.log(password);
-  try {
-    const checkResult = await db.query("SELECT * FROM users WHERE email = $1", [
+  })
+  app.get('/stock/:stockname', (req, res) => {
+    res.render(`${__dirname}/views/stock.ejs`, {name:req.params.stockname});
+  })
+  
+  
+  app.post("/register", async (req, res) => {
+    const email = req.body.username;
+    const password = req.body.password;
+    console.log(email);
+    console.log(password);
+    try {
+      const checkResult = await db.query("SELECT * FROM users WHERE email = $1", [
       email,
     ]);
-
+    
     if (checkResult.rows.length > 0) {
       res.send("Email already exists. Try logging in.");
     } else {
@@ -87,7 +87,7 @@ app.post("/signinup", async (req, res) => {
   const password = req.body.password;
   console.log(email);
   console.log(password);
-
+  
   try {
     const result = await db.query("SELECT * FROM users WHERE email = $1", [
       email,
@@ -95,9 +95,9 @@ app.post("/signinup", async (req, res) => {
     if (result.rows.length > 0) {
       const user = result.rows[0];
       const storedPassword = user.password;
-
+      
       if (password === storedPassword) {
-        res.send("Password matched");
+        res.sendFile(`${__dirname}/routes/dashboard.html`);
       } else {
         res.send("Incorrect Password");
       }
