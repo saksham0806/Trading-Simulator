@@ -8,7 +8,7 @@ const db = new pg.Client({
   user: "postgres",
   host: "localhost",
   database: "secrets",
-  password: "",
+  password: "6A2A7171",
   port: 5432,
 });
 db.connect();
@@ -25,14 +25,14 @@ app.use(express.static(`${__dirname}/views`));
 app.use(express.static(`${__dirname}/views/css`));
 app.use(express.static(`${__dirname}/views/script/`));
 const port = 3000;
-const db = new pg.Client({
-  user: "postgres",
-  host: "localhost",
-  database: "secrets",
-  password: "Pota4567#",
-  port: 5432,
-});
-db.connect();
+// // const db = new pg.Client({
+// //   user: "postgres",
+// //   host: "localhost",
+// //   database: "secrets",
+// //   password: "Pota4567#",
+// //   port: 5432,
+// // });
+// db.connect();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
@@ -83,29 +83,30 @@ app.post("/register", async (req, res) => {
 
 
 app.post("/signinup", async (req, res) => {
-  const email = req.body.username;
-  const password = req.body.password;
-  console.log(email);
-  console.log(password);
-  
+  const email = req.body.username.trim().toLowerCase(); // Normalize email
+  const password = req.body.password.trim(); // Trim password
+
   try {
-    const result = await db.query("SELECT * FROM users WHERE email = $1", [
-      email,
-    ]);
-    if (result.rows.length > 0) {
-      const user = result.rows[0];
-      const storedPassword = user.password;
-      
-      if (password === storedPassword) {
-        res.sendFile(`${__dirname}/routes/dashboard.html`);
-      } else {
-        res.send("Incorrect Password");
-      }
+    const result = await db.query("SELECT * FROM users WHERE email = $1", [email]);
+    
+    if (result.rows.length === 0) {
+      // User not found - redirect to register page with error
+      return res.redirect('/register?error=user_not_found');
+    }
+
+    const user = result.rows[0];
+    const storedPassword = user.password;
+    
+    if (password === storedPassword) {
+      // Successful login
+      return res.redirect('/dashboard');
     } else {
-      res.sendFile(`${__dirname}/routes/register.html`);
+      // Wrong password - redirect back to login with error
+      return res.redirect('/signinup?error=wrong_password');
     }
   } catch (err) {
-    console.log(err);
+    console.error("Login error:", err);
+    return res.redirect('/signinup?error=server_error');
   }
 });
 

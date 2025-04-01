@@ -1,29 +1,11 @@
-import express from "express";
-import bodyParser from "body-parser";
 import pg from "pg";
-
-// const db = new pg.Client({
-//   user: "postgres",
-//   host: "localhost",
-//   database: "world",
-//   password: "Pota4567#",
-//   port: 5432,
-// });
-const app = express();
-const port = 3000;
-
-// db.connect();
-
-// import { Client } from 'pg';
-
-
 async function fetchDataByName(name) {
   // Define your PostgreSQL connection details
   const client = new pg.Client({
     user: "postgres",
   host: "localhost",
   database: "secrets",
-  password: "Pota4567#",
+  password: "6A2A7171",
   port: 5432,
   });
 

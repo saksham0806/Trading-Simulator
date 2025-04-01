@@ -1,16 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign In/Sign Up</title>
   <link rel="stylesheet" href="/css/signinup.css">
   <link href="https://fonts.googleapis.com/css2?family=Tektur:wght@500&display=swap" rel="stylesheet">
+  <style>
+    .error-message {
+      color: #ff4444;
+      text-align: center;
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 4px;
+      background-color: #ffebee;
+      display: none;
+    }
+    .shake {
+      animation: shake 0.5s;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+  </style>
 </head>
-
 <body>
-  <div class="login-container">
+  <div class="login-container" id="loginContainer">
     <h1>Demo Trading Login</h1>
     <form id="loginForm" action="/signinup" method="POST">
       <div class="input-group">
@@ -23,8 +40,42 @@
       </div>
       <button type="submit">Login</button>
     </form>
-    <p id="error-message" class="error"></p>
+    <p id="error-message" class="error-message"></p>
   </div>
-</body>
 
+  <script>
+    // Check for error in URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get('error');
+    const errorMessage = document.getElementById('error-message');
+    const loginContainer = document.getElementById('loginContainer');
+
+    if (error) {
+      switch(error) {
+        case 'wrong_password':
+          errorMessage.textContent = 'Incorrect password. Please try again.';
+          errorMessage.style.display = 'block';
+          loginContainer.classList.add('shake');
+          setTimeout(() => loginContainer.classList.remove('shake'), 500);
+          break;
+        case 'user_not_found':
+          errorMessage.textContent = 'User not found. Please register.';
+          errorMessage.style.display = 'block';
+          break;
+        case 'server_error':
+          errorMessage.textContent = 'Server error. Please try again later.';
+          errorMessage.style.display = 'block';
+          break;
+      }
+    }
+
+    // Clear error when user starts typing
+    document.getElementById('username').addEventListener('input', () => {
+      errorMessage.style.display = 'none';
+    });
+    document.getElementById('password').addEventListener('input', () => {
+      errorMessage.style.display = 'none';
+    });
+  </script>
+</body>
 </html>
