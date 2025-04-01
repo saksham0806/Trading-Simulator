@@ -43,38 +43,38 @@ app.get('/', (req, res) => {
 
 app.get('/signinup', (req, res) => {
     res.sendFile(`${__dirname}/routes/signinup.html`);
-})
-app.get('/register', (req, res) => {
-  res.sendFile(`${__dirname}/routes/register.html`);
-})
-
-app.get('/dashboard', (req, res) => {
-  res.sendFile(`${__dirname}/routes/dashboard.html`);
-})
-app.get('/stock/:stockname', (req, res) => {
-  res.render(`${__dirname}/views/stock.ejs`, {name:req.params.stockname});
-})
-
-
-app.post("/register", async (req, res) => {
-  const email = req.body.username;
-  const password = req.body.password;
-  console.log(email);
-  console.log(password);
-  try {
-    const checkResult = await db.query("SELECT * FROM users WHERE email = $1", [
-      email,
-    ]);
-    
-    if (checkResult.rows.length > 0) {
-      res.send("Email already exists. Try logging in.");
-    } else {
-      const result = await db.query(
-        "INSERT INTO users (email, password) VALUES ($1, $2)",
-        [email, password]
-      );
-      console.log(result);
-      res.send("Saved");
+  })
+  app.get('/register', (req, res) => {
+    res.sendFile(`${__dirname}/routes/register.html`);
+  })
+  
+  app.get('/dashboard', (req, res) => {
+    res.sendFile(`${__dirname}/routes/dashboard.html`);
+  })
+  app.get('/stock/:stockname', (req, res) => {
+    res.render(`${__dirname}/views/stock.ejs`, {name:req.params.stockname});
+  })
+  
+  
+  app.post("/register", async (req, res) => {
+    const email = req.body.username;
+    const password = req.body.password;
+    console.log(email);
+    console.log(password);
+    try {
+      const checkResult = await db.query("SELECT * FROM users WHERE email = $1", [
+        email,
+      ]);
+      
+      if (checkResult.rows.length > 0) {
+        return res.redirect('/signinup?error=already_registered');
+      } else {
+        const result = await db.query(
+          "INSERT INTO users (email, password) VALUES ($1, $2)",
+          [email, password]
+        );
+        console.log(result);
+        return res.redirect('/signinup?error=success');
     }
   } catch (err) {
     console.log(err);

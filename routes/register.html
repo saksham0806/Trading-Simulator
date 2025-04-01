@@ -25,6 +25,41 @@
     </form>
     <p id="error-message" class="error"></p>
   </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get('error');
+    const errorMessage = document.getElementById('error-message');
+    const loginContainer = document.getElementById('loginContainer');
+
+    if (error) {
+      switch(error) {
+        case 'wrong_password':
+          errorMessage.textContent = 'Incorrect password. Please try again.';
+          errorMessage.style.display = 'block';
+          loginContainer.classList.add('shake');
+          setTimeout(() => loginContainer.classList.remove('shake'), 500);
+          break;
+        case 'user_not_found':
+          errorMessage.textContent = 'User not found. Please register.';
+          errorMessage.style.display = 'block';
+          break;
+        case 'server_error':
+          errorMessage.textContent = 'Server error. Please try again later.';
+          errorMessage.style.display = 'block';
+          break;
+      }
+    }
+
+    // Clear error when user starts typing
+    document.getElementById('username').addEventListener('input', () => {
+      errorMessage.style.display = 'none';
+    });
+    document.getElementById('password').addEventListener('input', () => {
+      errorMessage.style.display = 'none';
+    });
+  </script>
+
 </body>
 
 </html>
