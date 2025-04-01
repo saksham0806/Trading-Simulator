@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Trading Platform</title>
+    <link rel="stylesheet" href="./css/buysell.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Stock Trading Platform</h1>
+        
+        <div class="form-group">
+            <label for="stockSelect">Select Stock:</label>
+            <select id="stockSelect">
+                <option value="">-- Select a stock --</option>
+                <option value="IBM">IBM</option>
+                <option value="NVDA">NVIDIA (NVDA)</option>
+                <option value="GOOG">Alphabet (GOOG)</option>
+                <option value="TATAMOTORS">Tata Motors (TATAMOTORS)</option>
+                <option value="META">Meta (META)</option>
+                <option value="AMD">Advanced Micro Devices (AMD)</option>
+                <option value="INTC">Intel (INTC)</option>
+                <option value="MSFT">Microsoft (MSFT)</option>
+                <option value="AMZN">Amazon (AMZN)</option>
+                <option value="AAPL">Apple (AAPL)</option>
+                <option value="TSLA">Tesla (TSLA)</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" min="1" value="1">
+        </div>
+        
+        <div class="button-group">
+            <button id="buyBtn">Buy</button>
+            <button id="sellBtn">Sell</button>
+        </div>
+        
+        <div id="resultMessage" class="result"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const buyBtn = document.getElementById('buyBtn');
+            const sellBtn = document.getElementById('sellBtn');
+            const stockSelect = document.getElementById('stockSelect');
+            const quantityInput = document.getElementById('quantity');
+            const resultMessage = document.getElementById('resultMessage');
+            
+            buyBtn.addEventListener('click', function() {
+                processTransaction('buy');
+            });
+            
+            sellBtn.addEventListener('click', function() {
+                processTransaction('sell');
+            });
+            
+            function processTransaction(type) {
+                const stock = stockSelect.value;
+                const quantity = quantityInput.value;
+                
+                // Validate inputs
+                if (!stock) {
+                    showResult('Please select a stock', 'error');
+                    return;
+                }
+                
+                if (!quantity || quantity < 1) {
+                    showResult('Please enter a valid quantity', 'error');
+                    return;
+                }
+                
+                // In a real application, you would send this data to a server
+                const action = type === 'buy' ? 'purchased' : 'sold';
+                showResult(`Successfully ${action} ${quantity} shares of ${stock}`, 'success');
+                
+                // Reset form (optional)
+                // stockSelect.value = '';
+                // quantityInput.value = '1';
+            }
+            
+            function showResult(message, type) {
+                resultMessage.textContent = message;
+                resultMessage.className = 'result ' + type;
+                resultMessage.style.display = 'block';
+                
+                // Hide message after 5 seconds
+                setTimeout(function() {
+                    resultMessage.style.display = 'none';
+                }, 5000);
+            }
+        });
+    </script>
+</body>
+</html>
