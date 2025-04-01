@@ -4,14 +4,14 @@ import path from "path";
 import fs from "fs";
 import bodyParser from "body-parser";
 import pg from "pg";
-const db = new pg.Client({
-  user: "postgres",
-  host: "localhost",
-  database: "secrets",
-  password: "",
-  port: 5432,
-});
-db.connect();
+// const db = new pg.Client({
+//   user: "postgres",
+//   host: "localhost",
+//   database: "secrets",
+//   password: "Pota4567#",
+//   port: 5432,
+// });
+// db.connect();
 
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
@@ -25,14 +25,14 @@ app.use(express.static(`${__dirname}/views`));
 app.use(express.static(`${__dirname}/views/css`));
 app.use(express.static(`${__dirname}/views/script/`));
 const port = 3000;
-// const db = new pg.Client({
-//   user: "postgres",
-//   host: "localhost",
-//   database: "secrets",
-//   password: "Pota4567#",
-//   port: 5432,
-// });
-// db.connect();
+const db = new pg.Client({
+  user: "postgres",
+  host: "localhost",
+  database: "secrets",
+  password: "Pota4567#",
+  port: 5432,
+});
+db.connect();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
