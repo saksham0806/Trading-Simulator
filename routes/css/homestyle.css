@@ -24,11 +24,13 @@ body {
 
 /* Header */
 header {
-  background-color: #333;
+  background-color: #262424;
   color: #fff;
   padding: 20px 0;
 }
-
+header *{
+  background-color: #262424;
+}
 header h1 {
   margin: 0;
   font-size: 24px;
@@ -69,7 +71,7 @@ header nav ul li a.btn:hover {
 
 /* Hero Section */
 .mainline {
-  background-color: #f4f4f4;
+  background-color: #EEE5DA;
   padding: 100px 0;
   text-align: center;
 }
@@ -122,6 +124,10 @@ header nav ul li a.btn:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+.feature-item *{
+  background-color: #fff;
+}
+
 .feature-item h3 {
   font-size: 24px;
   margin-bottom: 10px;
@@ -139,6 +145,10 @@ footer {
   text-align: center;
   padding: 20px 0;
   margin-top: 40px;
+}
+
+footer *{
+  background-color: #262424;
 }
 
 footer p {

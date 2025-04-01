@@ -4,14 +4,14 @@ import path from "path";
 import fs from "fs";
 import bodyParser from "body-parser";
 import pg from "pg";
-// const db = new pg.Client({
-//   user: "postgres",
-//   host: "localhost",
-//   database: "secrets",
-//   password: "Pota4567#",
-//   port: 5432,
-// });
-// db.connect();
+const db = new pg.Client({
+  user: "postgres",
+  host: "localhost",
+  database: "secrets",
+  password: "",
+  port: 5432,
+});
+db.connect();
 
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
@@ -49,20 +49,20 @@ app.get('/register', (req, res) => {
 })
 
 app.get('/dashboard', (req, res) => {
-    res.sendFile(`${__dirname}/routes/dashboard.html`);
-  })
-  app.get('/stock/:stockname', (req, res) => {
-    res.render(`${__dirname}/views/stock.ejs`, {name:req.params.stockname});
-  })
-  
-  
-  app.post("/register", async (req, res) => {
-    const email = req.body.username;
-    const password = req.body.password;
-    console.log(email);
-    console.log(password);
-    try {
-      const checkResult = await db.query("SELECT * FROM users WHERE email = $1", [
+  res.sendFile(`${__dirname}/routes/dashboard.html`);
+})
+app.get('/stock/:stockname', (req, res) => {
+  res.render(`${__dirname}/views/stock.ejs`, {name:req.params.stockname});
+})
+
+
+app.post("/register", async (req, res) => {
+  const email = req.body.username;
+  const password = req.body.password;
+  console.log(email);
+  console.log(password);
+  try {
+    const checkResult = await db.query("SELECT * FROM users WHERE email = $1", [
       email,
     ]);
     
@@ -102,7 +102,7 @@ app.post("/signinup", async (req, res) => {
         res.send("Incorrect Password");
       }
     } else {
-      res.send("User not found");
+      res.sendFile(`${__dirname}/routes/register.html`);
     }
   } catch (err) {
     console.log(err);
