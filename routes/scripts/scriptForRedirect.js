@@ -14,6 +14,7 @@ async function addStock(symbol,quantity,initialBuy,currentSell){
 }
 
 addStock("ASD",23,233,422);
+addStock("AMAZON",123,23433,45622);
 
 let rows = document.querySelectorAll(".stocksInInventory tbody tr");
 rows.forEach(i => {
