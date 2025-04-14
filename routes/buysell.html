@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stock Trading Platform</title>
     <link rel="stylesheet" href="./css/buysell.css">
 </head>
+
 <body>
     <div class="container">
         <h1>Stock Trading Platform</h1>
-        
+
         <div class="form-group">
             <label for="stockSelect">Select Stock:</label>
             <select id="stockSelect">
@@ -27,71 +29,101 @@
                 <option value="TSLA">Tesla (TSLA)</option>
             </select>
         </div>
-        
+
         <div class="form-group">
             <label for="quantity">Quantity:</label>
             <input type="number" id="quantity" min="1" value="1">
         </div>
-        
+
         <div class="button-group">
             <button id="buyBtn">Buy</button>
             <button id="sellBtn">Sell</button>
         </div>
-        
+
         <div id="resultMessage" class="result"></div>
+
     </div>
-    <script src="./scripts/"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const buyBtn = document.getElementById('buyBtn');
             const sellBtn = document.getElementById('sellBtn');
             const stockSelect = document.getElementById('stockSelect');
             const quantityInput = document.getElementById('quantity');
             const resultMessage = document.getElementById('resultMessage');
-            
-            buyBtn.addEventListener('click', function() {
+
+            buyBtn.addEventListener('click', function () {
                 processTransaction('buy');
             });
-            
-            sellBtn.addEventListener('click', function() {
+
+            sellBtn.addEventListener('click', function () {
                 processTransaction('sell');
             });
-            
-            function processTransaction(type) {
+
+
+            // Add this to your buysell.html script to debug the stock values
+            async function processTransaction(type) {
                 const stock = stockSelect.value;
-                const quantity = quantityInput.value;
-                
+                const quantity = parseInt(quantityInput.value);
+
+                // Debug what values are being sent
+                console.log('Stock:', stock);
+                console.log('Quantity:', quantity);
+                console.log('Action:', type);
+
                 // Validate inputs
                 if (!stock) {
                     showResult('Please select a stock', 'error');
                     return;
                 }
-                
+
                 if (!quantity || quantity < 1) {
                     showResult('Please enter a valid quantity', 'error');
                     return;
                 }
-                
-                // In a real application, you would send this data to a server
-                const action = type === 'buy' ? 'purchased' : 'sold';
-                showResult(`Successfully ${action} ${quantity} shares of ${stock}`, 'success');
-                
-                // Reset form (optional)
-                // stockSelect.value = '';
-                // quantityInput.value = '1';
+
+                try {
+                    const requestBody = {
+                        stock,
+                        quantity,
+                        action: type
+                    };
+
+                    console.log('Sending request with data:', requestBody);
+
+                    const response = await fetch('/api/transaction', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(requestBody)
+                    });
+
+                    const data = await response.json();
+                    console.log('Response received:', data);
+
+                    if (response.ok) {
+                        const action = type === 'buy' ? 'purchased' : 'sold';
+                        showResult(`Successfully ${action} ${quantity} shares of ${stock}`, 'success');
+                    } else {
+                        showResult(data.error || 'Transaction failed', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showResult('Failed to process transaction', 'error');
+                }
             }
-            
+
             function showResult(message, type) {
                 resultMessage.textContent = message;
                 resultMessage.className = 'result ' + type;
                 resultMessage.style.display = 'block';
-                
-                // Hide message after 5 seconds
-                setTimeout(function() {
+
+                setTimeout(function () {
                     resultMessage.style.display = 'none';
                 }, 5000);
             }
         });
     </script>
 </body>
+
 </html>

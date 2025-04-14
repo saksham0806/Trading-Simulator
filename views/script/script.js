@@ -3,13 +3,13 @@
 // let apikey = "YPPADQPA2XTWLZXE";
 let apikey = "S9THLB3PV4TUWGPA";
 console.log("Script Running");
-let symbols = ["IBM", "NVDA", "GOOG", "TATAMOTORS", "META", "AMD", "INTC", "MSFT", "AMZN", "AAPL", "TSLA"];
+let symbols = ["IBM", "NVDA", "GOOG", "NDAQ", "META", "AMD", "INTC", "MSFT", "AMZN", "AAPL", "TSLA"];
 
 console.log(stock_name);
 async function fetchPrice(symbol) {
     console.log("fetching Prices")
-    let api = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=demo`);
-    // let api = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=5min&apikey=${apikey}`);
+    // let api = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=demo`);
+    let api = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=5min&apikey=${apikey}`);
     let result = await api.json();
     return result["Time Series (5min)"];
 }
