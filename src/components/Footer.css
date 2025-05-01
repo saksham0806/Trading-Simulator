@@ -1,0 +1,15 @@
+footer {
+  background-color: #262424;
+  color: #fff;
+  text-align: center;
+  padding: 20px 0;
+  margin-top: 40px;
+}
+
+footer *{
+  background-color: #262424;
+}
+
+footer p {
+  margin: 0;
+}
