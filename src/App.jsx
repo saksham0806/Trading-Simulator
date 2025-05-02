@@ -1,17 +1,21 @@
 import { useState } from 'react'
 import './App.css'
-import Navbar from './components/Navbar'
-import Footer from './components/Footer'
+import { HashRouter as Router, Routes, Route } from 'react-router-dom'
+import Home from './pages/home';
+import Dashboard from './pages/Dashboard';
+
 
 function App() {
-  const [count, setCount] = useState(0)
 
-  return (
-    <>
-        <Navbar logstatus='1' />
-        <Footer/>
-    </>
-  )
+    return (
+    
+        <Router>
+            <Routes>
+                <Route path='/' element = {<Home/>}/>
+                <Route path='/dash' element = {<Dashboard/>}/>
+            </Routes>
+        </Router>
+  );
 }
 
 export default App

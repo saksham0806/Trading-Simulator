@@ -1,0 +1,93 @@
+.dashmain {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+
+.summary {
+    background-color: #EEE5DA;
+    padding: 40px;
+}
+
+.summary h2 {
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+.summary-cards {
+    display: flex;
+    gap: 20px;
+}
+
+.card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    text-align: center;
+}
+
+.card * {
+    background-color: #fff;
+}
+
+.card h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 24px;
+    color: #28a745;
+}
+
+/* Portfolio Overview */
+.portfolio {
+    padding: 40px;
+}
+
+.portfolio h2 {
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th,
+table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #f4f4f4;
+}
+
+/* Recent Activity */
+.activity {
+    padding: 40px;
+}
+
+.activity h2 {
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+.activity ul {
+    list-style: none;
+    padding: 0;
+}
+
+.activity ul li {
+    background-color: #fff;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
