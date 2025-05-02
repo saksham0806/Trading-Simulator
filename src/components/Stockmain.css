@@ -1,0 +1,36 @@
+
+.stockGraphCSS {
+    width: 800px;
+    height: 400px;
+
+}
+
+.timeheader {
+    font-size: 30px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.minmax {
+    font-size: 20px;
+}
+
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pricesnumbercontainer {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.currentPrice {
+    font-size: 40px;
+}
+
+.changeInPrices {
+    font-size: 20px;
+}
