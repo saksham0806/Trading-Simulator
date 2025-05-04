@@ -1,6 +1,6 @@
 header {
     margin: 0;
-  padding: 0;
+    padding: 0;
     height: 100%;
     background-color: #262424;
     color: #fff;
@@ -11,7 +11,7 @@ header * {
     background-color: #262424;
 }
 
-.navcontainer{
+.navcontainer {
     display: flex;
     justify-content: space-between;
 }
@@ -49,6 +49,7 @@ header nav ul li a {
     padding: 8px 16px;
     border-radius: 4px;
 }
+
 .lbtn {
     background-color: rgb(255, 46, 46);
     padding: 8px 16px;
