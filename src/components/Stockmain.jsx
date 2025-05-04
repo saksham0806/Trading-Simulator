@@ -3,6 +3,8 @@ import "./Stockmain.css";
 
 function Stockmain(props) {
 
+    let symbol = props.stockName;
+    console.log(symbol);
 
     // let apikey = "YPPADQPA2XTWLZXE";
     let apikey = "S9THLB3PV4TUWGPA";

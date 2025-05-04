@@ -1,14 +1,18 @@
 import React from "react";
-import "./Stock.css";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import Stockmain from "../components/Stockmain";
 
-function Stock(prop){
+function Stock(prop) {
+
+    const parameters = useParams();
+    let selectedStock = parameters.slug;
     return (
         <div>
-            <Navbar/>
-            <Footer/>
+            <Navbar />
+            <Stockmain stockName={selectedStock} />
+            <Footer />
         </div>
 
     );
