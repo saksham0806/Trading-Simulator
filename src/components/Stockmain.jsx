@@ -1,26 +1,33 @@
 import React from "react";
+import { useEffect,useState } from "react";
 import "./Stockmain.css";
 
 function Stockmain(props) {
-
     let symbol = props.stockName;
-    console.log(symbol);
-
     // let apikey = "YPPADQPA2XTWLZXE";
     let apikey = "S9THLB3PV4TUWGPA";
-    console.log("Script Running");
     let symbols = ["IBM", "NVDA", "GOOG", "NDAQ", "META", "AMD", "INTC", "MSFT", "AMZN", "AAPL", "TSLA"];
-    async function fetchPrice(symbol) {
-        console.log("fetching Prices")
-        let api = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=demo`);
-        // let api = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=5min&apikey=${apikey}`);
-        let result = await api.json();
-        return result["Time Series (5min)"];
-    }
-    async function add(symbol) {
+    const [stockPrices,setstockPrices] = useState(null);
+    const [loading, setLoading] = useState(true);
+    
+    useEffect(() => {
+        async function fetchPrice(symbol) {
+            console.log("fetching Prices")
+            let api = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=demo`);
+            // let api = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=5min&apikey=${apikey}`);
+            let result = await api.json();
+            return result["Time Series (5min)"];
+        }
+        setLoading(true);
+        fetchPrice(symbol).then(data =>{
+            console.log(data)
+            setstockPrices(data);
+        })
+        setLoading(false);
+      }, []);
 
+      
         let linecolor = "";
-        let stockPrices = await fetchPrice(symbol);
         let prices = [];
         let times = [];
         for (const timestamp in stockPrices) {
@@ -39,8 +46,18 @@ function Stockmain(props) {
             linecolor = "rgb(242, 139, 130)";
         }
 
+        let changepercentage = prices[prices.length - 1] / prices[0];
+        if (changepercentage < 1) {
+            changepercentage = (1 - changepercentage) * 100;
+            // change.style.color = "rgb(242, 139, 130)";
+        }
+        else {
+            changepercentage = (changepercentage - 1) * 100;
+            // change.style.color = "rgb(129, 201, 149)";
+        }
 
-        prices1 = prices.slice(0, 12);
+
+        let prices1 = prices.slice(0, 12);
         let maxPrice24 = prices[0];
         let minPrice24 = prices[0];
         let maxprice1 = prices[0];
@@ -70,8 +87,6 @@ function Stockmain(props) {
 
 
 
-    }
-
 
 
 
@@ -79,6 +94,14 @@ function Stockmain(props) {
         <div className="Stockmain">
             <div class="main">
                 <div class="pricesContainer">
+                    <div className="pricesnumbercontainer">
+                        <div className="currentPrice">
+                            current price = {currPrice}
+                        </div>
+                        <div className="changeInPrices">
+                            change per = {changepercentage}
+                        </div>
+                    </div>
                     <canvas id="stockChart" class="stockGraphCSS"></canvas>
                 </div>
             </div>
@@ -123,11 +146,15 @@ async function addSymbol(symbol) {
         changepercentage = (changepercentage - 1) * 100;
         change.style.color = "rgb(129, 201, 149)";
     }
+
+
     changepercentage = Math.round(changepercentage * 100) / 100;
     changedifference = Math.round(Math.abs(prices[prices.length - 1] - prices[0]) * 100) / 100;
     change.innerHTML = changedifference + " (" + changepercentage + "%)";
     div.append(current);
     div.append(change);
+
+
     let maxdiv = document.createElement("div");
     let mindiv = document.createElement("div");
     let timeheader = document.createElement("div");
