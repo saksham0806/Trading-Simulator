@@ -1,5 +1,6 @@
 import React from "react";
-import { useEffect,useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import Chart from "chart.js/auto";
 import "./Stockmain.css";
 
 function Stockmain(props) {
@@ -7,9 +8,11 @@ function Stockmain(props) {
     // let apikey = "YPPADQPA2XTWLZXE";
     let apikey = "S9THLB3PV4TUWGPA";
     let symbols = ["IBM", "NVDA", "GOOG", "NDAQ", "META", "AMD", "INTC", "MSFT", "AMZN", "AAPL", "TSLA"];
-    const [stockPrices,setstockPrices] = useState(null);
+    const [stockPrices, setstockPrices] = useState(null);
     const [loading, setLoading] = useState(true);
-    
+    const chartRef = useRef(null);
+    const chartInstance = useRef(null);
+
     useEffect(() => {
         async function fetchPrice(symbol) {
             console.log("fetching Prices")
@@ -19,90 +22,166 @@ function Stockmain(props) {
             return result["Time Series (5min)"];
         }
         setLoading(true);
-        fetchPrice(symbol).then(data =>{
+        fetchPrice(symbol).then(data => {
             console.log(data)
             setstockPrices(data);
+            setLoading(false);
         })
-        setLoading(false);
-      }, []);
+    }, [symbol]);
 
-      
-        let linecolor = "";
-        let prices = [];
-        let times = [];
-        for (const timestamp in stockPrices) {
-            if (stockPrices.hasOwnProperty(timestamp)) {
-                times.push(timestamp);
-                prices.push(parseFloat(stockPrices[timestamp]["4. close"]));
+    useEffect(() => {
+        if (!loading && stockPrices && chartRef.current) {
+            if (chartInstance.current) {
+                chartInstance.current.destroy();
             }
-        }
-        let currPrice = prices[0];
-        times.reverse();
-        prices.reverse();
-        if (prices[prices.length - 1] > prices[0]) {
-            linecolor = "rgb(129, 201, 149)";
-        }
-        else {
-            linecolor = "rgb(242, 139, 130)";
-        }
-
-        let changepercentage = prices[prices.length - 1] / prices[0];
-        if (changepercentage < 1) {
-            changepercentage = (1 - changepercentage) * 100;
-            // change.style.color = "rgb(242, 139, 130)";
-        }
-        else {
-            changepercentage = (changepercentage - 1) * 100;
-            // change.style.color = "rgb(129, 201, 149)";
-        }
-
-
-        let prices1 = prices.slice(0, 12);
-        let maxPrice24 = prices[0];
-        let minPrice24 = prices[0];
-        let maxprice1 = prices[0];
-        let minprice1 = prices[0];
-
-        prices.forEach(i => {
-            if (i > maxPrice24) {
-                maxPrice24 = i;
+            
+            let prices = [];
+            let times = [];
+            for (const timestamp in stockPrices) {
+                if (stockPrices.hasOwnProperty(timestamp)) {
+                    times.push(timestamp);
+                    prices.push(parseFloat(stockPrices[timestamp]["4. close"]));
+                }
             }
-            if (i < minPrice24) {
-                minPrice24 = i;
-            }
-        });
-        prices1.forEach(i => {
-            if (i > maxprice1) {
-                maxprice1 = i;
-            }
-            if (i < minprice1) {
-                minprice1 = i;
-            }
-        });
+            
+            times.reverse();
+            prices.reverse();
+            
+            let linecolor = prices[prices.length - 1] > prices[0] ? "rgb(129, 201, 149)" : "rgb(242, 139, 130)";
+            
+            const ctx = chartRef.current.getContext('2d');
+            chartInstance.current = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: times,
+                    datasets: [{
+                        data: prices,
+                        borderColor: linecolor,
+                        backgroundColor: linecolor,
+                        borderWidth: 2,
+                        pointRadius: 0,
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            display: true,
+                            grid: {
+                                display: true,
+                                drawBorder: false,
+                            },
+                            ticks: {
+                                display: false,
+                                autoSkip: true,
+                                maxTicksLimit: 5,
+                            },
+                            title: {
+                                display: false,
+                            }
+                        },
+                        y: {
+                            display: true,
+                            grid: {
+                                display: true,
+                                drawBorder: false,
+                            },
+                            ticks: {
+                                display: false,
+                                stepSize: 50,
+                            },
+                            title: {
+                                display: false,
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    elements: {
+                        line: {
+                            tension: 0
+                        }
+                    }
+                }
+            });
+        }
+    }, [loading, stockPrices]);
 
-        maxPrice24 = Math.round(maxPrice24 * 100) / 100;
-        minPrice24 = Math.round(minPrice24 * 100) / 100;
-        maxprice1 = Math.round(maxprice1 * 100) / 100;
-        minprice1 = Math.round(minprice1 * 100) / 100;
+    if (loading) {
+        return (
+            <div>
+                Loading...
+            </div>
+        );
+    }
 
+    let prices = [];
+    let times = [];
+    for (const timestamp in stockPrices) {
+        if (stockPrices.hasOwnProperty(timestamp)) {
+            times.push(timestamp);
+            prices.push(parseFloat(stockPrices[timestamp]["4. close"]));
+        }
+    }
+    
+    let currPrice = prices[0];
+    times.reverse();
+    prices.reverse();
+    
+    let linecolor = "";
+    if (prices[prices.length - 1] > prices[0]) {
+        linecolor = "rgb(129, 201, 149)";
+    }
+    else {
+        linecolor = "rgb(242, 139, 130)";
+    }
+    
+    let changeInPriceToday = prices[prices.length - 1] - prices[0];
+    let changepercentage = prices[prices.length - 1] / prices[0];
+    if (changepercentage < 1) {
+        changepercentage = (1 - changepercentage) * 100;
+    } 
+    else {
+        changepercentage = (changepercentage - 1) * 100;
+    }
 
+    let prices1 = prices.slice(0, 12);
+    let maxPrice24 = Math.max(...prices);
+    let minPrice24 = Math.min(...prices);
+    let maxprice1 = Math.max(...prices1);
+    let minprice1 = Math.min(...prices1);
 
-
-
+    maxPrice24 = Math.round(maxPrice24 * 100) / 100;
+    minPrice24 = Math.round(minPrice24 * 100) / 100;
+    maxprice1 = Math.round(maxprice1 * 100) / 100;
+    minprice1 = Math.round(minprice1 * 100) / 100;
 
     return (
         <div className="Stockmain">
-            <div class="main">
-                <div class="pricesContainer">
+            <div className="main">
+                <div className="pricesContainer">
+                    <div className="stockname">
+                        {symbol}
+                    </div>
                     <div className="pricesnumbercontainer">
                         <div className="currentPrice">
-                            current price = {currPrice}
+                            {currPrice}
                         </div>
-                        <div className="changeInPrices">
-                            change per = {changepercentage}
+                        <div className="changeInPrices" style={{ color: linecolor }}>
+                            {Math.round(changeInPriceToday * 100) / 100}({Math.round(changepercentage * 100) / 100}%)
                         </div>
                     </div>
-                    <canvas id="stockChart" class="stockGraphCSS"></canvas>
+                    <canvas id="stockChart" ref={chartRef} className="stockGraphCSS" width="1000" height="600"></canvas>
+                    <div className="timeheader">From Last 24 hours</div>
+                    <div className="minmax">Max Price - {maxPrice24}</div>
+                    <div className="minmax">Min Price - {minPrice24}</div>
+                    <div className="timeheader">From Last hours</div>
+                    <div className="minmax">Max Price - {maxprice1}</div>
+                    <div className="minmax">Min Price - {minprice1}</div>
                 </div>
             </div>
         </div>
@@ -110,141 +189,3 @@ function Stockmain(props) {
 }
 
 export default Stockmain;
-
-
-
-
-
-
-
-async function addSymbol(symbol) {
-
-    console.log(currPrice);
-
-
-
-
-
-    let symbolName = document.createElement("div");
-    symbolName.innerHTML = symbol;
-    symbolName.style.fontSize = '60px';
-
-    let div = document.createElement("div");
-    div.className = "pricesnumbercontainer";
-    let current = document.createElement("div");
-    current.className = "currentPrice"
-    current.innerHTML = `${currPrice}
-    `;
-    let change = document.createElement("div");
-    change.className = "changeInPrices";
-    let changepercentage = prices[prices.length - 1] / prices[0];
-    if (changepercentage < 1) {
-        changepercentage = (1 - changepercentage) * 100;
-        change.style.color = "rgb(242, 139, 130)";
-    }
-    else {
-        changepercentage = (changepercentage - 1) * 100;
-        change.style.color = "rgb(129, 201, 149)";
-    }
-
-
-    changepercentage = Math.round(changepercentage * 100) / 100;
-    changedifference = Math.round(Math.abs(prices[prices.length - 1] - prices[0]) * 100) / 100;
-    change.innerHTML = changedifference + " (" + changepercentage + "%)";
-    div.append(current);
-    div.append(change);
-
-
-    let maxdiv = document.createElement("div");
-    let mindiv = document.createElement("div");
-    let timeheader = document.createElement("div");
-    timeheader.className = "timeheader";
-    timeheader.innerHTML = "from last 24 hours";
-    maxdiv.className = "minmax maxdiv";
-    mindiv.className = "minmax mindiv";
-    maxdiv.innerHTML = `Max Price - ${maxPrice24}`;
-    mindiv.innerHTML = `Min Price - ${minPrice24}`;
-
-    let maxdiv1 = document.createElement("div");
-    let mindiv1 = document.createElement("div");
-    let timeheader1 = document.createElement("div");
-    timeheader1.className = "timeheader";
-    timeheader1.innerHTML = "from last 1 hours"
-    maxdiv1.className = "minmax maxdiv";
-    mindiv1.className = "minmax mindiv";
-    maxdiv1.innerHTML = `Max Price - ${maxprice1}`;
-    mindiv1.innerHTML = `Min Price - ${minprice1}`;
-
-
-    document.querySelector(".pricesContainer").prepend(div);
-    document.querySelector(".pricesContainer").prepend(symbolName);
-    document.querySelector(".pricesContainer").append(timeheader);
-    document.querySelector(".pricesContainer").append(maxdiv);
-    document.querySelector(".pricesContainer").append(mindiv);
-    document.querySelector(".pricesContainer").append(timeheader1);
-    document.querySelector(".pricesContainer").append(maxdiv1);
-    document.querySelector(".pricesContainer").append(mindiv1);
-
-
-
-    const ctx = document.getElementById('stockChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: times,
-            datasets: [{
-                data: prices,
-                borderColor: linecolor,
-                backgroundColor: linecolor,
-                borderWidth: 2,
-                pointRadius: 0,
-            }]
-        },
-        options: {
-            responsive: false,
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                    display: true,
-                    grid: {
-                        display: true,
-                        drawBorder: false,
-                    },
-                    ticks: {
-                        display: false,
-                        autoSkip: true,
-                        maxTicksLimit: 5,
-                    },
-                    title: {
-                        display: false,
-                    }
-                },
-                y: {
-                    display: true,
-                    grid: {
-                        display: true,
-                        drawBorder: false,
-                    },
-                    ticks: {
-                        display: false,
-                        stepSize: 50,
-                    },
-                    title: {
-                        display: false,
-                    }
-                }
-            },
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
-            elements: {
-                line: {
-                    tension: 0
-                }
-            }
-        }
-    });
-
-}

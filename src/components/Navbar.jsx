@@ -24,7 +24,7 @@ function Navbar(props) {
     else {
         return (
             <header>
-                <div class="navcontainer">
+                <div className="navcontainer">
                     <h1>Demo Trading</h1>
                     <nav>
                         <ul>

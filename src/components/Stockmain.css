@@ -34,3 +34,21 @@
 .changeInPrices {
     font-size: 20px;
 }
+
+.stockname{
+    font-size: 80px;
+}
+
+.timeheader {
+    font-size: 30px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.minmax {
+    font-size: 20px;
+}
+
+.loadingText{
+    font-size: 40px;
+}
