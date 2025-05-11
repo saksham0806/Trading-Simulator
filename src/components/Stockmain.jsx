@@ -4,10 +4,10 @@ import Chart from "chart.js/auto";
 import "./Stockmain.css";
 
 function Stockmain(props) {
-    let symbol = props.stockName;
     // let apikey = "YPPADQPA2XTWLZXE";
     let apikey = "S9THLB3PV4TUWGPA";
     let symbols = ["IBM", "NVDA", "GOOG", "NDAQ", "META", "AMD", "INTC", "MSFT", "AMZN", "AAPL", "TSLA"];
+    const[symbol,setsymbol] = useState(props.stockName);
     const [stockPrices, setstockPrices] = useState(null);
     const [loading, setLoading] = useState(true);
     const chartRef = useRef(null);
@@ -34,7 +34,7 @@ function Stockmain(props) {
             if (chartInstance.current) {
                 chartInstance.current.destroy();
             }
-            
+
             let prices = [];
             let times = [];
             for (const timestamp in stockPrices) {
@@ -43,12 +43,12 @@ function Stockmain(props) {
                     prices.push(parseFloat(stockPrices[timestamp]["4. close"]));
                 }
             }
-            
+
             times.reverse();
             prices.reverse();
-            
+
             let linecolor = prices[prices.length - 1] > prices[0] ? "rgb(129, 201, 149)" : "rgb(242, 139, 130)";
-            
+
             const ctx = chartRef.current.getContext('2d');
             chartInstance.current = new Chart(ctx, {
                 type: 'line',
@@ -111,6 +111,11 @@ function Stockmain(props) {
         }
     }, [loading, stockPrices]);
 
+    const handleStockChange = (e) => {
+        let stk = e.target.value;
+        setsymbol(stk);
+    }
+
     if (loading) {
         return (
             <div>
@@ -127,11 +132,11 @@ function Stockmain(props) {
             prices.push(parseFloat(stockPrices[timestamp]["4. close"]));
         }
     }
-    
+
     let currPrice = prices[0];
     times.reverse();
     prices.reverse();
-    
+
     let linecolor = "";
     if (prices[prices.length - 1] > prices[0]) {
         linecolor = "rgb(129, 201, 149)";
@@ -139,12 +144,12 @@ function Stockmain(props) {
     else {
         linecolor = "rgb(242, 139, 130)";
     }
-    
+
     let changeInPriceToday = prices[prices.length - 1] - prices[0];
     let changepercentage = prices[prices.length - 1] / prices[0];
     if (changepercentage < 1) {
         changepercentage = (1 - changepercentage) * 100;
-    } 
+    }
     else {
         changepercentage = (changepercentage - 1) * 100;
     }
@@ -164,9 +169,19 @@ function Stockmain(props) {
         <div className="Stockmain">
             <div className="main">
                 <div className="pricesContainer">
-                    <div className="stockname">
-                        {symbol}
-                    </div>
+                    <select
+                        name="stockname"
+                        className="stockname"
+                        id="stockname"
+                        value={symbol}
+                        onChange={handleStockChange}
+                    >
+                        {symbols.map((stockSymbol) => (
+                            <option key={stockSymbol} value={stockSymbol}>
+                                {stockSymbol}
+                            </option>
+                        ))}
+                    </select>
                     <div className="pricesnumbercontainer">
                         <div className="currentPrice">
                             {currPrice}
