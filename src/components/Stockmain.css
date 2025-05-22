@@ -123,7 +123,7 @@
   .stockname {
     background-color: #EEE5DA;
     border-color: #bdc8d2;
-    color: #000000;
+    color: #212529;
     font-size: 25px;
   }
   
@@ -133,7 +133,7 @@
   }
   
   .stockname:focus {
-    background-color: #212529;
+    background-color: #EEE5DA;
     border-color: #4dabf7;
   }
   
@@ -144,8 +144,8 @@
   }
   
   .stockname option {
-    background-color: #343a40;
-    color: #f8f9fa;
+    background-color: #EEE5DA;
+    color: #212529;
   }
 }
 
@@ -167,7 +167,7 @@ div.stockname {
 /* Dark mode for stock display */
 @media (prefers-color-scheme: dark) {
   div.stockname {
-    color: #f8f9fa;
+    color: #212529;
   }
 }
 
