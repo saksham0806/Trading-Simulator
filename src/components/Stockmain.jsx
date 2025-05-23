@@ -4,10 +4,9 @@ import Chart from "chart.js/auto";
 import "./Stockmain.css";
 
 function Stockmain(props) {
-    // let apikey = "YPPADQPA2XTWLZXE";
-    let apikey = "S9THLB3PV4TUWGPA";
+    
     let symbols = ["IBM", "NVDA", "GOOG", "NDAQ", "META", "AMD", "INTC", "MSFT", "AMZN", "AAPL", "TSLA"];
-    const[symbol,setsymbol] = useState(props.stockName);
+    const [symbol, setsymbol] = useState(props.stockName);
     const [stockPrices, setstockPrices] = useState(null);
     const [loading, setLoading] = useState(true);
     const chartRef = useRef(null);
@@ -15,11 +14,9 @@ function Stockmain(props) {
 
     useEffect(() => {
         async function fetchPrice(symbol) {
-            console.log("fetching Prices")
-            let api = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=demo`);
-            // let api = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=5min&apikey=${apikey}`);
+            let api = await fetch(`http://localhost:3000/prices/${symbol}/`)
             let result = await api.json();
-            return result["Time Series (5min)"];
+            return result;
         }
         setLoading(true);
         fetchPrice(symbol).then(data => {
@@ -35,17 +32,8 @@ function Stockmain(props) {
                 chartInstance.current.destroy();
             }
 
-            let prices = [];
-            let times = [];
-            for (const timestamp in stockPrices) {
-                if (stockPrices.hasOwnProperty(timestamp)) {
-                    times.push(timestamp);
-                    prices.push(parseFloat(stockPrices[timestamp]["4. close"]));
-                }
-            }
-
-            times.reverse();
-            prices.reverse();
+            let prices = stockPrices["prices"];
+            let times = stockPrices["times"];
 
             let linecolor = prices[prices.length - 1] > prices[0] ? "rgb(129, 201, 149)" : "rgb(242, 139, 130)";
 
@@ -123,19 +111,17 @@ function Stockmain(props) {
             </div>
         );
     }
+    let changepercentage = stockPrices["changepercentage"];
+    let changeInPriceToday = stockPrices["changedifference"]
+    let maxPrice24 = stockPrices["maxPrice24"];
+    let minPrice24 = stockPrices["minPrice24"];
+    let maxprice1 = stockPrices["maxprice1"];
+    let minprice1 = stockPrices["minprice1"];
+    let currPrice = stockPrices["currPrice"]
 
-    let prices = [];
-    let times = [];
-    for (const timestamp in stockPrices) {
-        if (stockPrices.hasOwnProperty(timestamp)) {
-            times.push(timestamp);
-            prices.push(parseFloat(stockPrices[timestamp]["4. close"]));
-        }
-    }
 
-    let currPrice = prices[0];
-    times.reverse();
-    prices.reverse();
+    let prices = stockPrices["prices"];
+    let times = stockPrices["times"];
 
     let linecolor = "";
     if (prices[prices.length - 1] > prices[0]) {
@@ -145,25 +131,12 @@ function Stockmain(props) {
         linecolor = "rgb(242, 139, 130)";
     }
 
-    let changeInPriceToday = prices[prices.length - 1] - prices[0];
-    let changepercentage = prices[prices.length - 1] / prices[0];
     if (changepercentage < 1) {
         changepercentage = (1 - changepercentage) * 100;
     }
     else {
         changepercentage = (changepercentage - 1) * 100;
     }
-
-    let prices1 = prices.slice(0, 12);
-    let maxPrice24 = Math.max(...prices);
-    let minPrice24 = Math.min(...prices);
-    let maxprice1 = Math.max(...prices1);
-    let minprice1 = Math.min(...prices1);
-
-    maxPrice24 = Math.round(maxPrice24 * 100) / 100;
-    minPrice24 = Math.round(minPrice24 * 100) / 100;
-    maxprice1 = Math.round(maxprice1 * 100) / 100;
-    minprice1 = Math.round(minprice1 * 100) / 100;
 
     return (
         <div className="Stockmain">
