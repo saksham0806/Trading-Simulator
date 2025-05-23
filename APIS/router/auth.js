@@ -2,8 +2,8 @@ import express from "express";
 
 const auth = express.Router();
 
-auth.get("/login",(resizeBy,req)=>{
-    resizeBy.send("login");
+auth.get("/",(req,res)=>{
+    res.send("auth to be implemented");
 });
 
 
