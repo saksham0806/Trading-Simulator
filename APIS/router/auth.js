@@ -11,18 +11,12 @@ export default function(db){
         const {username,password} = req.body;
 
         try{
-            const attempt = await db.query(`SELECT username FROM users WHERE username = $1`,[username])
-            if(attempt.rows.length>0){
-                res.status(500).json("user already exits")
+            const attempt = await db.query(`SELECT username FROM users WHERE (username = $1 AND password = $2)`,[username,password])
+            if(attempt.rows.length<=0){
+                res.status(500).json("Invalid username or password")
             }
             else{
-                db.query(`INSERT INTO users (username,password) VALUES ($1,$2)`,[username,password],(err,result)=>{
-                    if(err){
-                        res.status(500),json(err);
-                    }else{
-                        res.status(200).json("logged in");
-                    }
-                })
+                res.status(200).json("login success");
             }
         }catch(err){
             console.log(err);
