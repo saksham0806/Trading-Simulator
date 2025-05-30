@@ -1,4 +1,28 @@
 import express from "express";
+import jwt from "jsonwebtoken";
+
+const JWT_SECRET_KEY = "my secret key";
+const REFRESH_TOKEN_KEY = "refresh key";
+
+
+// function authenticatToken(req,res,next){
+
+//     const authHeader = req.headers['authorization'];
+//     const token = authHeader && authHeader.split(" ")[1]
+
+//     if(!token){
+//         return res.status(401).json("No access");
+//     }
+    
+//     jwt.verify(token,JWT_SECRET_KEY,(err,user)=>{
+//         if(err){
+//             return res.status(401).json("No access");
+//         }
+//         req.user = user;
+//         next();
+//     })
+
+// }
 
 export default function(db){
     const auth = express.Router();
@@ -16,7 +40,28 @@ export default function(db){
                 res.status(500).json("Invalid username or password")
             }
             else{
-                res.status(200).json("login success");
+
+                const accessToken = jwt.sign(
+                    {
+                        user:username,
+                        pass:password
+                    },
+                    JWT_SECRET_KEY,
+                    {expiresIn: "900s"}
+                );
+                const refreshToken = jwt.sign(
+                    {
+                        user:username,
+                        pass:password
+                    },
+                    REFRESH_TOKEN_KEY
+                );
+
+                res.status(200).json(
+                    {
+                        "access token":accessToken,
+                        "refresh token":refreshToken
+                    });
             }
         }catch(err){
             console.log(err);
