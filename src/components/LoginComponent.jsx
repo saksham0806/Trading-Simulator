@@ -1,15 +1,19 @@
 import React from "react";
 import { useState } from "react";
 import "./Signinup.css";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser, logout } from "../redux/auth/auth";
 
 function LoginComponent() {
-
+    const dispatch = useDispatch();
+    const {accesstoken} = useSelector(state => state.auth);
     const [formdata, setformdata] = useState(
         {
             username: "",
             password: ""
         }
     )
+    const [t,sett] = useState("");
 
     function handlechange(e) {
         setformdata({
@@ -32,8 +36,8 @@ function LoginComponent() {
             if (!res.ok) {
                 throw new Error(`HTTP error! status: ${res.status}`);
             }
-
             const data = await res.json();
+            dispatch(loginUser(data))
             console.log("Success:", data);
 
         } catch (error) {

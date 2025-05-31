@@ -10,7 +10,6 @@ prices.get('/:symbol', async (req, res) => {
   let symbol = req.params.symbol;
 
   let apikey = "S9THLB3PV4TUWGPA";
-  console.log("Script Running");
   let symbols = ["IBM", "NVDA", "GOOG", "NDAQ", "META", "AMD", "INTC", "MSFT", "AMZN", "AAPL", "TSLA"];
 
   async function fetchPrice(symbol) {
