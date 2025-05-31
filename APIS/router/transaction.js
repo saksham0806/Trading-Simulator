@@ -54,7 +54,7 @@ export default function(db){
                     if(err){
                         res.status(404).json("user not valid or stockname not valid")
                     }else{
-                        res.status(200).json("successfull bought stocks")
+                        res.status(200).json("successfully bought stocks")
                     }
                 })
         }
