@@ -1,7 +1,30 @@
 import React from "react";
 import "./Dashmain.css"
+import { useDispatch, useSelector } from "react-redux";
 
 function Dashmain() {
+
+    let accessToken = ""
+    const dispatch = useDispatch();
+    const {accesstoken} = useSelector(state => state.auth);
+    // if(accessToken==""){
+    //     return (
+    //         <div>User Not logged in</div>
+    //     );
+    // }
+    function countTrades(arr){
+        let cnt = 0;
+        arr.forEach(element => {
+            if(element!=0){
+                return cnt;
+            }
+        });
+    }
+
+
+
+
+
     return (
 
         <div classNameName="dashmain">

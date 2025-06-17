@@ -2,6 +2,7 @@ import express from "express";
 import pricesAPI from "./router/prices.js";
 import auth from "./router/auth.js";
 import transaction from "./router/transaction.js";
+import user from "./router/user.js"
 import cors from "cors";
 import {Pool} from "pg";
 
@@ -24,9 +25,10 @@ db.connect().then(()=>{
 
 app.use(express.json());
 app.use(cors());
-app.use("/prices",pricesAPI);
+app.use("/prices",pricesAPI(db));
 app.use("/auth",auth(db));
 app.use("/transaction",transaction(db));
+app.use("/user",user(db));
 
 
 app.get('/', (req, res) => {
