@@ -10,6 +10,27 @@ export default function (db) {
     user.get("/", (req, res) => {
         res.send("user to be implemented");
     });
+    let username = ""
+
+    user.post("/getStocks",async (req, res) => {
+        let { accessToken } = req.body;
+
+        jwt.verify(accessToken, JWT_SECRET_KEY, (err, user) => {
+            if (err) {
+                res.status(401).json("User not valid")
+            }
+            username = user.user
+
+        })
+
+        try {
+            const attempt = await db.query(`SELECT * FROM portfolio WHERE username = $1`,[username])
+            res.status(200).json(attempt.rows[0]);
+        }catch (err){
+            res.status(501).json(err);
+        }
+
+    });
 
     return user;
 };    

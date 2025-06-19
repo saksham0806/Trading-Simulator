@@ -1,21 +1,54 @@
 import React from "react";
 import "./Dashmain.css"
 import { useDispatch, useSelector } from "react-redux";
+import { data } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 function Dashmain() {
 
-    let accessToken = ""
     const dispatch = useDispatch();
-    const {accesstoken} = useSelector(state => state.auth);
+    // const { accessToken } = useSelector(state => state.auth);
+    const [userData, setUserData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    let accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZHNhIiwicGFzcyI6ImRzYSIsImlhdCI6MTc1MDI1NzYyMH0.TKOw_YiGUZ0tWId8uk7nt2UX4pDAEt2ccSL0qu_Z_kM";
     // if(accessToken==""){
     //     return (
     //         <div>User Not logged in</div>
     //     );
     // }
-    function countTrades(arr){
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const response = await fetch("http://localhost:3000/user/getStocks", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({"accessToken":accessToken })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                setUserData(data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUserData();
+    }, [accessToken]);
+    console.log(userData);
+    function countTrades(arr) {
         let cnt = 0;
         arr.forEach(element => {
-            if(element!=0){
+            if (element != 0) {
                 return cnt;
             }
         });
