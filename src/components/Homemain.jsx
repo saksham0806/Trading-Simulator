@@ -1,15 +1,16 @@
 import React from "react";
 import './Homemain.css'
+import { Link } from "react-router-dom";
 
 function Homemain() {
     return (
         <div className="HomeMainBody">
 
-            <section class="mainline">
-                <div class="container">
+            <section className="mainline">
+                <div className="container">
                     <h2>Trade Smarter, Not Harder</h2>
                     <p>Join our demo trading platform to practice trading with virtual funds and real-time market data.</p>
-                    <a href="signinup.html" class="btn">Get Started</a>
+                    <Link to="/login" className="btn">Get Started</Link>
                 </div>
             </section>
             <section id="features" className="features">

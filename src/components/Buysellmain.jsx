@@ -6,19 +6,18 @@ function Buysellmain() {
 
     const {accesstoken} = useSelector(state => state.auth);
 
-    const [formdata, setformdata] = useState(
-        {
-            // accesstoken:`${accesstoken}`,
-            accesstoken:`eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZHNhIiwicGFzcyI6ImRzYSIsImlhdCI6MTc0ODY5ODI3M30.fmiuY9Pyc2kipltoizDrA8ywNUSU0m-0jnzTiEEziCg`,
-            stockname: "",
-            quantity: 0
-        }
-    )
+    const [formdata, setformdata] = useState({
+        accesstoken: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZHNhIiwicGFzcyI6ImRzYSIsImlhdCI6MTc0ODY5ODI3M30.fmiuY9Pyc2kipltoizDrA8ywNUSU0m-0jnzTiEEziCg`,
+        stockname: "",
+        quantity: 1  // Changed default to 1 instead of 0
+    })
 
     function handlechange(e) {
         setformdata({
             ...formdata,
-            [e.target.name]: e.target.value
+            [e.target.name]: e.target.name === "quantity" 
+                ? parseInt(e.target.value) || 0  // Convert to number
+                : e.target.value
         })
     }
 
@@ -59,7 +58,7 @@ function Buysellmain() {
             )
     
             if (!res.ok) {
-                throw new Error(`HTTP error! status: ${res.status}`);
+                throw new Error(`HTTP error! status: ${res.status} \n ${res.json()}`);
             }
             const data = await res.json();
             console.log("Success:", data);
@@ -80,7 +79,7 @@ function Buysellmain() {
                     <option value="IBM">IBM</option>
                     <option value="NVDA">NVIDIA (NVDA)</option>
                     <option value="GOOG">Google (GOOG)</option>
-                    <option value="TATAMOTORS">NDAQ</option>
+                    <option value="NDAQ">NDAQ</option>
                     <option value="META">Meta (META)</option>
                     <option value="AMD">Advanced Micro Devices (AMD)</option>
                     <option value="INTC">Intel (INTC)</option>
@@ -91,9 +90,16 @@ function Buysellmain() {
                 </select>
             </div>
 
-            <div class="form-group">
-                <label for="quantity">Quantity:</label>
-                <input type="number" id="quantity" min="1" value="1" name="quantity" onChange={handlechange}/>
+            <div className="form-group">
+                <label htmlFor="quantity">Quantity:</label>
+                <input 
+                    type="number" 
+                    id="quantity" 
+                    min="1" 
+                    value={formdata.quantity}
+                    name="quantity" 
+                    onChange={handlechange}
+                />
             </div>
 
             <div class="button-group">

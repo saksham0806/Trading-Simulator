@@ -169,7 +169,7 @@ function Dashmain() {
                 </div>
             </section>
 
-            <section id="activity" className="activity">
+            {/* <section id="activity" className="activity">
                 <div className="container">
                     <h2>Recent Activity</h2>
                     <ul>
@@ -178,7 +178,7 @@ function Dashmain() {
                         <li>Bought 2 GOOGL shares at $2,800.00</li>
                     </ul>
                 </div>
-            </section>
+            </section> */}
         </div>
 
     );

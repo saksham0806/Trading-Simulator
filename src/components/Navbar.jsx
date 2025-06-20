@@ -1,4 +1,5 @@
 import "./Navbar.css"
+import { Link } from "react-router-dom";
 
 function Navbar(props) {
     if (props.logstatus == '1') {
@@ -9,11 +10,11 @@ function Navbar(props) {
                     <h1>Demo Trading</h1>
                     <nav>
                         <ul>
-                            <li><a href="#features">Features</a></li>
+                            {/* <li><a href="#features">Features</a></li>
                             <li><a href="#about">About</a></li>
-                            <li><a href="#contact">Contact</a></li>
-                            <li><a href="signinup.html" className="sbtn">Login</a></li>
-                            <li><a href="register.html" className="sbtn">Register</a></li>
+                            <li><a href="#contact">Contact</a></li> */}
+                            <li><Link to="/login" className="sbtn">Login</Link></li>
+                            <li><Link to="/register" className="sbtn">Register</Link></li>
                         </ul>
                     </nav>
                 </div>
