@@ -6,12 +6,20 @@ import { useState, useEffect } from "react";
 
 function Dashmain() {
 
+    let symbols = ["IBM", "NVDA", "GOOG", "NDAQ", "META", "AMD", "INTC", "MSFT", "AMZN", "AAPL", "TSLA"];
+
     const dispatch = useDispatch();
     // const { accessToken } = useSelector(state => state.auth);
     const [userData, setUserData] = useState(null);
+    const [userBalance, setUserBalance] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [tradeCount, settradeCount] = useState(0);
     const [error, setError] = useState(null);
+    const [stockPrices, setStockPrices] = useState(null);
+    const [stockValue, setStockvalue] = useState(0);
+    const [tableData, settableData] = useState([]);
     let accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZHNhIiwicGFzcyI6ImRzYSIsImlhdCI6MTc1MDI1NzYyMH0.TKOw_YiGUZ0tWId8uk7nt2UX4pDAEt2ccSL0qu_Z_kM";
+
     // if(accessToken==""){
     //     return (
     //         <div>User Not logged in</div>
@@ -19,22 +27,25 @@ function Dashmain() {
     // }
 
     useEffect(() => {
-        const fetchUserData = async () => {
+        const fetchData = async () => {
             try {
                 const response = await fetch("http://localhost:3000/user/getStocks", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({"accessToken":accessToken })
+                    body: JSON.stringify({ "accessToken": accessToken })
                 });
+                const response2 = await fetch("http://localhost:3000/prices/getAllPrices");
 
-                if (!response.ok) {
+                if (!response.ok || !response2.ok) {
                     throw new Error('Network response was not ok');
                 }
 
                 const data = await response.json();
+                const data2 = await response2.json();
                 setUserData(data);
+                setStockPrices(data2);
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -42,40 +53,64 @@ function Dashmain() {
             }
         };
 
-        fetchUserData();
+        fetchData();
     }, [accessToken]);
-    console.log(userData);
-    function countTrades(arr) {
-        let cnt = 0;
-        arr.forEach(element => {
-            if (element != 0) {
-                return cnt;
-            }
-        });
-    }
 
+    // console.log(userData);
+    // console.log(stockPrices);
+
+    function processTable(symbols, stockPrices, userData) {
+        let count = 0;
+        let stockvalue = 0;
+        for (let i = 0; i < stockPrices.length; i++) {
+            const stock = stockPrices[i].stock;
+            const price = stockPrices[i].price;
+            const quantity = userData[stock];
+            stockvalue += price * quantity;
+            if (quantity != 0) {
+                count++;
+                setStockvalue(stockValue + (price * quantity))
+                settableData(prevData => [...prevData, {
+                    stock: stock,
+                    price: price,
+                    quantity: quantity
+                }]);
+            }
+        }
+        console.log(userData["balance"]);
+        settradeCount(count);
+        setStockvalue(stockvalue);
+        // console.log(tableData)
+    }
+    useEffect(() => {
+        if (stockPrices) {
+            processTable(symbols, stockPrices, userData);
+            setUserBalance(userData["balance"]);
+            console.log(userBalance);
+        }
+    }, [stockPrices, userData]);
 
 
 
 
     return (
 
-        <div classNameName="dashmain">
+        <div className="dashmain">
             <section className="summary">
                 <div className="container">
                     <h2>Welcome Back, Trader!</h2>
                     <div className="summary-cards">
                         <div className="card">
                             <h3>Account Balance</h3>
-                            <p>$10,000.00</p>
+                            <p>${userBalance}</p>
                         </div>
                         <div className="card">
-                            <h3>Total Profit</h3>
-                            <p>$1,500.00</p>
+                            <h3>Total Stock Value</h3>
+                            <p>${Math.round(stockValue * 100) / 100}</p>
                         </div>
                         <div className="card">
-                            <h3>Open Trades</h3>
-                            <p>5</p>
+                            <h3>Total Holdings</h3>
+                            <p>{tradeCount}</p>
                         </div>
                     </div>
                 </div>
@@ -89,13 +124,26 @@ function Dashmain() {
                             <tr>
                                 <th>Asset</th>
                                 <th>Quantity</th>
-                                <th>Initial Price</th>
+                                {/* <th>Initial Price</th> */}
                                 <th>Price</th>
                                 <th>Value</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+
+                            {
+                                tableData.map((item) => (
+                                    <tr key={item.stock}>
+                                        <td>{item.stock}</td>
+                                        <td>{item.quantity}</td>
+                                        <td>{item.price}</td>
+                                        <td>{Math.round(item.price * item.quantity * 100) / 100}</td>
+                                    </tr>
+                                ))
+
+                            }
+
+                            {/* <tr>
                                 <td>IBM</td>
                                 <td>10</td>
                                 <td>$150.00</td>
@@ -115,7 +163,7 @@ function Dashmain() {
                                 <td>$2,800.00</td>
                                 <td>$2,800.00</td>
                                 <td>$5,600.00</td>
-                            </tr>
+                            </tr> */}
                         </tbody>
                     </table>
                 </div>
