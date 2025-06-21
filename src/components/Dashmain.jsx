@@ -1,15 +1,17 @@
 import React from "react";
 import "./Dashmain.css"
 import { useDispatch, useSelector } from "react-redux";
-import { data } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 function Dashmain() {
-
+    let Navigate = useNavigate();
     let symbols = ["IBM", "NVDA", "GOOG", "NDAQ", "META", "AMD", "INTC", "MSFT", "AMZN", "AAPL", "TSLA"];
 
     const dispatch = useDispatch();
-    // const { accessToken } = useSelector(state => state.auth);
+    const accessToken  = useSelector(state => state.auth.accesstoken);
+    // console.log(accessToken);
+    // let accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZHNhIiwicGFzcyI6ImRzYSIsImlhdCI6MTc1MDI1NzYyMH0.TKOw_YiGUZ0tWId8uk7nt2UX4pDAEt2ccSL0qu_Z_kM";
     const [userData, setUserData] = useState(null);
     const [userBalance, setUserBalance] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -18,13 +20,12 @@ function Dashmain() {
     const [stockPrices, setStockPrices] = useState(null);
     const [stockValue, setStockvalue] = useState(0);
     const [tableData, settableData] = useState([]);
-    let accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZHNhIiwicGFzcyI6ImRzYSIsImlhdCI6MTc1MDI1NzYyMH0.TKOw_YiGUZ0tWId8uk7nt2UX4pDAEt2ccSL0qu_Z_kM";
 
-    // if(accessToken==""){
-    //     return (
-    //         <div>User Not logged in</div>
-    //     );
-    // }
+    if(accessToken==""){
+        return (
+            <div>User Not logged in</div>
+        );
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -56,8 +57,6 @@ function Dashmain() {
         fetchData();
     }, [accessToken]);
 
-    // console.log(userData);
-    // console.log(stockPrices);
 
     function processTable(symbols, stockPrices, userData) {
         let count = 0;
@@ -77,7 +76,7 @@ function Dashmain() {
                 }]);
             }
         }
-        console.log(userData["balance"]);
+        // console.log(userData["balance"]);
         settradeCount(count);
         setStockvalue(stockvalue);
         // console.log(tableData)
@@ -86,10 +85,13 @@ function Dashmain() {
         if (stockPrices) {
             processTable(symbols, stockPrices, userData);
             setUserBalance(userData["balance"]);
-            console.log(userBalance);
+            // console.log(userBalance);
         }
     }, [stockPrices, userData]);
 
+    function handleStockClick(a){
+        Navigate(`/stock/${a}`)
+    }
 
 
 
@@ -133,7 +135,7 @@ function Dashmain() {
 
                             {
                                 tableData.map((item) => (
-                                    <tr key={item.stock}>
+                                    <tr key={item.stock} onClick={()=>{handleStockClick(item.stock)}}>
                                         <td>{item.stock}</td>
                                         <td>{item.quantity}</td>
                                         <td>{item.price}</td>

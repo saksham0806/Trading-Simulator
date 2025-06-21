@@ -18,8 +18,11 @@ export default function (db) {
         jwt.verify(accessToken, JWT_SECRET_KEY, (err, user) => {
             if (err) {
                 res.status(401).json("User not valid")
+            }try{
+                username = user.user
+            }catch(err){
+                console.log(err);
             }
-            username = user.user
 
         })
 

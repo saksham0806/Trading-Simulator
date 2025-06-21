@@ -1,7 +1,11 @@
 import "./Navbar.css"
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser, logout } from "../redux/auth/auth";
+
 
 function Navbar(props) {
+    
     if (props.logstatus == '1') {
 
         return (
@@ -31,7 +35,7 @@ function Navbar(props) {
                             <li><a href="#features">Features</a></li>
                             <li><a href="#about">About</a></li>
                             <li><a href="#contact">Contact</a></li>
-                            <li><a href="signinup.html" className="lbtn btn">Logout</a></li>
+                            <li><Link to="/login"  className="lbtn btn" onClick={()=>{logout()}}>Logout</Link></li>
                         </ul>
                     </nav>
                 </div>
