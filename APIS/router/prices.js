@@ -1,9 +1,12 @@
 import express from "express";
-
+let key = "d1bb3a1r01qsbpububo0d1bb3a1r01qsbpububog";
+let polygon = "	zzH6soyGbzA0COmbNxpJpC9xt8RlfrJR";
+let alpaca = "PKN0V6BWX95M9TCR9ZGL"
 let apikey = "S9THLB3PV4TUWGPA";
 async function fetchPrice(symbol) {
     console.log("fetching Prices")
-    let api = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=demo`);
+    let api = await fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${key}`)
+    // let api = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=demo`);
     // let api = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=5min&apikey=${apikey}`);
     let result = await api.json();
     return result["Time Series (5min)"];

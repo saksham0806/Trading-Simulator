@@ -51,7 +51,7 @@ function LoginComponent() {
     };
     return (
         <div className="authbody">
-            <div class="login-container" id="loginContainer">
+            <div className="login-container" id="loginContainer">
                 <h1>Demo Trading Login</h1>
                 <form id="loginForm" onSubmit={handleSubmit}>
                     <div className="input-group">
