@@ -6,6 +6,12 @@ import user from "./router/user.js"
 import cors from "cors";
 import {Pool} from "pg";
 
+
+import { createClient } from '@supabase/supabase-js'
+const supabaseUrl = 'https://jlfwhuigtawtclnogmrq.supabase.co'
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpsZndodWlndGF3dGNsbm9nbXJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1NzMxNzAsImV4cCI6MjA2NjE0OTE3MH0.psyd2RPJ0g1VRaKlJQ0Wpfba-j58iuQFXpW2IczvgCs"
+const supabase = createClient(supabaseUrl, supabaseKey)
+
 const app = express()
 const port = 3000;
 
@@ -26,7 +32,7 @@ db.connect().then(()=>{
 app.use(express.json());
 app.use(cors());
 app.use("/prices",pricesAPI(db));
-app.use("/auth",auth(db));
+app.use("/auth",auth(supabase));
 app.use("/transaction",transaction(db));
 app.use("/user",user(db));
 
