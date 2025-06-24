@@ -1,5 +1,6 @@
 import express from "express";
 import jwt from "jsonwebtoken";
+import { data } from "react-router-dom";
 
 const JWT_SECRET_KEY = "my secret key";
 const REFRESH_TOKEN_KEY = "refresh key";
@@ -24,7 +25,7 @@ const REFRESH_TOKEN_KEY = "refresh key";
 
 // }
 
-export default function (db) {
+export default function (supabase) {
     const auth = express.Router();
 
     auth.get("/", (req, res) => {
@@ -33,40 +34,48 @@ export default function (db) {
 
     auth.post("/login", async (req, res) => {
         const { username, password } = req.body;
+        if (!username || !password) {
+            return res.status(400).json("Username and password are required");
+        }
 
         try {
-            const attempt = await db.query(`SELECT username FROM users WHERE (username = $1 AND password = $2)`, [username, password])
-            if (attempt.rows.length <= 0) {
-                res.status(500).json("Invalid username or password")
+            const { data, error } = await supabase
+                .from('userdetails')
+                .select('*')
+                .eq('username', username)
+                .eq('password', password);
+            
+            console.log(data)
+            if (error || !data) {
+                return res.status(401).json("Invalid username or password");
             }
-            else {
 
-                const accessToken = jwt.sign(
-                    {
-                        user: username,
-                        pass: password
-                    },
-                    JWT_SECRET_KEY
-                    // ,{ expiresIn: "900s" }
-                );
-                const refreshToken = jwt.sign(
-                    {
-                        user: username,
-                        pass: password
-                    },
-                    REFRESH_TOKEN_KEY
-                );
+            const accessToken = jwt.sign(
+                {
+                    user: username,
+                    pass: password
+                },
+                JWT_SECRET_KEY
+                // { expiresIn: "900s" } // optional expiration
+            );
 
-                res.status(200).json(
-                    {
-                        "accesstoken": accessToken,
-                        "refreshtoken": refreshToken
-                    });
-            }
+            const refreshToken = jwt.sign(
+                { user: username },
+                REFRESH_TOKEN_KEY
+            );
+
+            return res.status(200).json({
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            });
+
         } catch (err) {
-            console.log(err);
+            console.error("Login error:", err);
+            return res.status(500).json("Internal server error");
         }
     });
+
+
     auth.post("/register", async (req, res) => {
         const { username, password } = req.body;
 
@@ -80,11 +89,11 @@ export default function (db) {
                     if (err) {
                         res.status(501).json(err);
                     }
-                    else{
+                    else {
                         db.query(`INSERT INTO portfolio (username) VALUES ($1)`, [username], (err1, result1) => {
                             if (err1) {
                                 res.status(502).json(err);
-                            }else{
+                            } else {
                                 res.status(200).json("User created");
                             }
                         })
