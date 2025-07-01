@@ -34,7 +34,7 @@ app.use(cors());
 app.use("/prices",pricesAPI(db));
 app.use("/auth",auth(supabase));
 app.use("/transaction",transaction(db));
-app.use("/user",user(db));
+app.use("/user",user(supabase));
 
 
 app.get('/', (req, res) => {
