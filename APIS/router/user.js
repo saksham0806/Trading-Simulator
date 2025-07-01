@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 const JWT_SECRET_KEY = "my secret key";
 const REFRESH_TOKEN_KEY = "refresh key";
 
-export default function (db) {
+export default function (supabase) {
     const user = express.Router();
 
     user.get("/", (req, res) => {
@@ -12,24 +12,29 @@ export default function (db) {
     });
     let username = ""
 
-    user.post("/getStocks",async (req, res) => {
-        let { accessToken } = req.body;
+    user.post("/getStocks", async (req, res) => {
+        let { accesstoken } = req.body;
 
-        jwt.verify(accessToken, JWT_SECRET_KEY, (err, user) => {
+        jwt.verify(accesstoken, JWT_SECRET_KEY, (err, user) => {
             if (err) {
                 res.status(401).json("User not valid")
-            }try{
+            } try {
                 username = user.user
-            }catch(err){
+            } catch (err) {
                 console.log(err);
             }
 
         })
 
         try {
-            const attempt = await db.query(`SELECT * FROM portfolio WHERE username = $1`,[username])
-            res.status(200).json(attempt.rows[0]);
-        }catch (err){
+
+            const { data, error } = await supabase
+                .from('portfolio')
+                .select('*')
+                .eq('username', username);
+                console.log(username)
+            res.status(200).json(data);
+        } catch (err) {
             res.status(501).json(err);
         }
 

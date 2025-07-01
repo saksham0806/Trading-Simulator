@@ -33,7 +33,7 @@ app.use(express.json());
 app.use(cors());
 app.use("/prices",pricesAPI(db));
 app.use("/auth",auth(supabase));
-app.use("/transaction",transaction(db));
+app.use("/transaction",transaction(supabase));
 app.use("/user",user(supabase));
 
 
