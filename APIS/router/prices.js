@@ -1,15 +1,42 @@
 import express from "express";
 let key = "d1bb3a1r01qsbpububo0d1bb3a1r01qsbpububog";
-let polygon = "	zzH6soyGbzA0COmbNxpJpC9xt8RlfrJR";
+let polygon_api_key = "	zzH6soyGbzA0COmbNxpJpC9xt8RlfrJR";
 let alpaca = "PKN0V6BWX95M9TCR9ZGL"
 let apikey = "S9THLB3PV4TUWGPA";
+
+function formattedDate(timestamp) {
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+}
+function formattedTime(timestamp) {
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(date.getDate()).padStart(2, '0');
+    const hour = String(date.getHours()).padStart(2, '0');
+    const min = String(date.getMinutes()).padStart(2, '0');
+    const sec = String(date.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hour}:${min}:${sec}`;
+}
+
+let today = formattedDate(Date.now());
+let yesterday = formattedDate(Date.now()-(60 * 60 * 24 * 1000));
+
+console.log()
+
+
 async function fetchPrice(symbol) {
     console.log("fetching Prices")
-    let api = await fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${key}`)
+    let api = await fetch(`https://api.polygon.io/v2/aggs/ticker/${symbol}/range/1/minute/${yesterday}/${today}?adjusted=true&sort=asc&limit=50000&apiKey=${polygon_api_key}`)
     // let api = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=demo`);
     // let api = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=5min&apikey=${apikey}`);
     let result = await api.json();
-    return result["Time Series (5min)"];
+    return result["results"];
 }
 
 
@@ -19,19 +46,18 @@ async function sendPrices(symbol) {
     let stockPrices = await fetchPrice(symbol);
     let prices = [];
     let times = [];
-    for (const timestamp in stockPrices) {
-        if (stockPrices.hasOwnProperty(timestamp)) {
-            times.push(timestamp);
-            prices.push(parseFloat(stockPrices[timestamp]["4. close"]));
-        }
+
+    for(let i=0;i<stockPrices.length;i++){
+        prices.push(stockPrices[i]['c']);
+        times.push(formattedTime(stockPrices[i]['t']));
     }
     let currPrice = prices[0];
 
     times.reverse();
     prices.reverse();
-    // console.log(currPrice);
+    console.log(currPrice);
 
-    let prices1 = prices.slice(0, 12); // Fixed: added 'let'
+    let prices1 = prices.slice(0, 12);
     let maxPrice24 = prices[0];
     let minPrice24 = prices[0];
 
@@ -103,8 +129,8 @@ export default function (db) {
 
     const date = new Date();
 
-    prices.get('/', (req, res) => {
-        res.status(200).json("working");
+    prices.get('/', async (req, res) => {
+        res.status(200).json(await sendPrices("IBM"));
     });
 
     prices.get("/setAll", async (req, res) => {
