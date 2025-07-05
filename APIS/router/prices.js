@@ -24,8 +24,8 @@ function formattedTime(timestamp) {
     return `${year}-${month}-${day} ${hour}:${min}:${sec}`;
 }
 
-let today = formattedDate(Date.now());
-let yesterday = formattedDate(Date.now()-(60 * 60 * 24 * 1000));
+let today = formattedDate(Date.now()-(60 * 60 * 24 * 1000));
+let yesterday = formattedDate(Date.now()-2*(60 * 60 * 24 * 1000));
 
 console.log()
 
@@ -130,7 +130,7 @@ export default function (db) {
     const date = new Date();
 
     prices.get('/', async (req, res) => {
-        res.status(200).json(await sendPrices("IBM"));
+        res.status(200).json(await fetchPrice("IBM"));
     });
 
     prices.get("/setAll", async (req, res) => {
