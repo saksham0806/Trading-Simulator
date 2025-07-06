@@ -1,8 +1,10 @@
 import express from "express";
-let key = "d1bb3a1r01qsbpububo0d1bb3a1r01qsbpububog";
 let polygon_api_key = "	zzH6soyGbzA0COmbNxpJpC9xt8RlfrJR";
-let alpaca = "PKN0V6BWX95M9TCR9ZGL"
-let apikey = "S9THLB3PV4TUWGPA";
+let symbols = ["IBM", "NVDA", "GOOG", "NDAQ", "META", "AMD", "INTC", "MSFT", "AMZN", "AAPL", "TSLA"];
+
+// let key = "d1bb3a1r01qsbpububo0d1bb3a1r01qsbpububog";
+// let alpaca = "PKN0V6BWX95M9TCR9ZGL"
+// let apikey = "S9THLB3PV4TUWGPA";
 
 function formattedDate(timestamp) {
     const date = new Date(timestamp);
@@ -24,8 +26,8 @@ function formattedTime(timestamp) {
     return `${year}-${month}-${day} ${hour}:${min}:${sec}`;
 }
 
-let today = formattedDate(Date.now()-(60 * 60 * 24 * 1000));
-let yesterday = formattedDate(Date.now()-2*(60 * 60 * 24 * 1000));
+let today = formattedDate(Date.now() - 2*(60 * 60 * 24 * 1000));
+let yesterday = formattedDate(Date.now() - 3 * (60 * 60 * 24 * 1000));
 
 console.log()
 
@@ -47,7 +49,7 @@ async function sendPrices(symbol) {
     let prices = [];
     let times = [];
 
-    for(let i=0;i<stockPrices.length;i++){
+    for (let i = 0; i < stockPrices.length; i++) {
         prices.push(stockPrices[i]['c']);
         times.push(formattedTime(stockPrices[i]['t']));
     }
@@ -115,7 +117,6 @@ async function sendPrices(symbol) {
     };
 }
 
-let symbols = ["IBM", "NVDA", "GOOG", "NDAQ", "META", "AMD", "INTC", "MSFT", "AMZN", "AAPL", "TSLA"];
 
 
 
@@ -123,7 +124,7 @@ let symbols = ["IBM", "NVDA", "GOOG", "NDAQ", "META", "AMD", "INTC", "MSFT", "AM
 
 
 
-export default function (db) {
+export default function (supabase, db) {
 
     const prices = express.Router();
 
@@ -134,24 +135,46 @@ export default function (db) {
     });
 
     prices.get("/setAll", async (req, res) => {
-
+        
         let pricejsons = [];
         async function addToArray() {
             for (let e of symbols) {
                 let temp = await sendPrices(e);
                 pricejsons.push(temp)
+                await new Promise(resolve => setTimeout(resolve, 15000));
             }
         }
         await addToArray();
 
         try {
-            await db.query(`INSERT INTO stockprices ("Time") VALUES ($1)`, [date]);
+
+
+
+            // const { data, error } = await supabase
+            //     .from('stockprices')
+            //     .insert([
+            //         {
+            //             Time: date
+            //         }
+            //     ]);
+
+            // if (error) {
+            //     res.status(500).json("error updating time in db");
+            //     throw error;
+            // }
 
             for (let i = 0; i < pricejsons.length; i++) {
-                await db.query(
-                    `UPDATE stockprices SET "${symbols[i]}" = $1 WHERE "Time" = $2`,
-                    [pricejsons[i], date]
-                );
+
+                
+                const { data, error } = await supabase
+                    .from('stockprices')
+                    .update({
+                        [symbols[i].toLowerCase()]: pricejsons[i]
+                    })
+                    .eq('id', 1)
+                    if(error){
+                        console.log(error)
+                    }
                 console.log(`Updated ${symbols[i]}`);
             }
 
@@ -160,9 +183,6 @@ export default function (db) {
             return res.status(501).json(err);
         }
 
-
-
-        res.status(200).json(pricejsons);
     });
 
     prices.get("/getAll", async (req, res) => {
