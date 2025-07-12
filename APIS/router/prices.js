@@ -26,8 +26,8 @@ function formattedTime(timestamp) {
     return `${year}-${month}-${day} ${hour}:${min}:${sec}`;
 }
 
-let today = formattedDate(Date.now() - 2*(60 * 60 * 24 * 1000));
-let yesterday = formattedDate(Date.now() - 3 * (60 * 60 * 24 * 1000));
+let today = formattedDate(Date.now() - 1 * (60 * 60 * 24 * 1000));
+let yesterday = formattedDate(Date.now() - 2 * (60 * 60 * 24 * 1000));
 
 console.log()
 
@@ -187,8 +187,9 @@ export default function (supabase, db) {
 
     prices.get("/getAll", async (req, res) => {
         try {
-            let attempt = await db.query("SELECT * FROM stockprices");
-            res.status(200).json(attempt.rows[attempt.rows.length - 1]);
+            const {data,err} = await supabase.from("stockprices")
+            .select("*");
+            return res.status(200).json(data);
         } catch (err) {
             res.status(501).json(err);
         }

@@ -44,8 +44,9 @@ export default function (supabase) {
                 .select('*')
                 .eq('username', username)
                 .eq('password', password);
-            console.log(data)
+            // console.log(data)
             if (error || data.length < 1) {
+                
                 return res.status(401).json("Invalid username or password");
             }
 

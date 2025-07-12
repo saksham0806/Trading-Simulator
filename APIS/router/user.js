@@ -10,21 +10,24 @@ export default function (supabase) {
     user.get("/", (req, res) => {
         res.send("user to be implemented");
     });
-    let username = ""
-
+    let username = "";
+    
     user.post("/getStocks", async (req, res) => {
+        let username = "";
         let { accesstoken } = req.body;
 
         jwt.verify(accesstoken, JWT_SECRET_KEY, (err, user) => {
             if (err) {
-                res.status(401).json("User not valid")
-            } try {
-                username = user.user
-            } catch (err) {
-                console.log(err);
+                return res.status(401).json("User not valid");
             }
 
-        })
+            try {
+                const username = user.user;
+            } catch (err) {
+                console.log(err);
+                return res.status(401).json("Invalid token structure");
+            }
+        });
 
         try {
 
@@ -32,10 +35,10 @@ export default function (supabase) {
                 .from('portfolio')
                 .select('*')
                 .eq('username', username);
-                console.log(username)
-            res.status(200).json(data);
+            console.log(username)
+            return res.status(200).json(data);
         } catch (err) {
-            res.status(501).json(err);
+            return res.status(501).json(err);
         }
 
     });
