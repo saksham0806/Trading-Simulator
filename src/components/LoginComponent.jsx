@@ -42,7 +42,7 @@ function LoginComponent() {
             const data = await res.json();
 
             // Dispatch with correct payload format
-            dispatch(loginUser({ accesstoken: data.accesstoken }));
+            dispatch(loginUser({ accesstoken: data.accessToken }));
 
             Navigate("/dash");
         } catch (error) {

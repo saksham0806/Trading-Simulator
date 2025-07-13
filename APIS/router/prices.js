@@ -121,9 +121,6 @@ async function sendPrices(symbol) {
 
 
 
-
-
-
 export default function (supabase, db) {
 
     const prices = express.Router();
@@ -197,10 +194,11 @@ export default function (supabase, db) {
 
     prices.get("/getAllPrices", async (req, res) => {
         try {
-            let attempt = await db.query("SELECT * FROM stockprices");
             let result = [];
+            const {data,err} = await supabase.from("stockprices")
+            .select("*");
             for (let i = 0; i < symbols.length; i++) {
-                let temp = attempt.rows[attempt.rows.length - 1][symbols[i]]["currPrice"];
+                let temp = data[0][symbols[i].toLowerCase()]["currPrice"];
                 result.push({ stock: symbols[i], price: temp });
             }
             res.status(200).json(result);

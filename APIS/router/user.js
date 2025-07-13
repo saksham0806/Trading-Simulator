@@ -15,6 +15,7 @@ export default function (supabase) {
     user.post("/getStocks", async (req, res) => {
         let username = "";
         let { accesstoken } = req.body;
+        console.log(req.body) 
 
         jwt.verify(accesstoken, JWT_SECRET_KEY, (err, user) => {
             if (err) {

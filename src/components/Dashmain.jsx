@@ -35,7 +35,7 @@ function Dashmain() {
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ "accessToken": accessToken })
+                    body: JSON.stringify({ "accesstoken": accessToken })
                 });
                 const response2 = await fetch("http://localhost:3000/prices/getAllPrices");
 
