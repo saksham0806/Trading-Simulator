@@ -7,7 +7,7 @@ function Buysellmain() {
     const {accesstoken} = useSelector(state => state.auth);
 
     const [formdata, setformdata] = useState({
-        accesstoken: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZHNhIiwicGFzcyI6ImRzYSIsImlhdCI6MTc0ODY5ODI3M30.fmiuY9Pyc2kipltoizDrA8ywNUSU0m-0jnzTiEEziCg`,
+        accesstoken: accesstoken,
         stockname: "",
         quantity: 1  // Changed default to 1 instead of 0
     })

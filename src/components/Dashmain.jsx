@@ -64,7 +64,8 @@ function Dashmain() {
         for (let i = 0; i < stockPrices.length; i++) {
             const stock = stockPrices[i].stock;
             const price = stockPrices[i].price;
-            const quantity = userData[stock];
+            const quantity = userData[stock.toLowerCase()];
+            // console.log({stock,price,quantity})
             stockvalue += price * quantity;
             if (quantity != 0) {
                 count++;
@@ -76,16 +77,13 @@ function Dashmain() {
                 }]);
             }
         }
-        // console.log(userData["balance"]);
         settradeCount(count);
         setStockvalue(stockvalue);
-        // console.log(tableData)
     }
     useEffect(() => {
         if (stockPrices) {
             processTable(symbols, stockPrices, userData);
             setUserBalance(userData["balance"]);
-            // console.log(userBalance);
         }
     }, [stockPrices, userData]);
 
@@ -135,7 +133,7 @@ function Dashmain() {
 
                             {
                                 tableData.map((item) => (
-                                    <tr key={item.stock} onClick={()=>{handleStockClick(item.stock)}}>
+                                    <tr onClick={()=>{handleStockClick(item.stock)}}>
                                         <td>{item.stock}</td>
                                         <td>{item.quantity}</td>
                                         <td>{item.price}</td>

@@ -7,6 +7,7 @@ import Stock from './pages/Stock';
 import Login from './pages/Login'
 import Register from './pages/Register';
 import Buysell from './pages/Buysell';
+import History from './pages/History';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
                 <Route path='/login' element = {<Login/>}/>
                 <Route path='/register' element = {<Register/>}/>
                 <Route path='/buysell' element = {<Buysell/>}/>
+                <Route path='/history' element = {<History/>}/>
             </Routes>
         </Router>
   );

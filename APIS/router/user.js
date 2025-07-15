@@ -15,7 +15,6 @@ export default function (supabase) {
     user.post("/getStocks", async (req, res) => {
         let username = "";
         let { accesstoken } = req.body;
-        console.log(req.body) 
 
         jwt.verify(accesstoken, JWT_SECRET_KEY, (err, user) => {
             if (err) {
@@ -23,7 +22,7 @@ export default function (supabase) {
             }
 
             try {
-                const username = user.user;
+                username = user.user;
             } catch (err) {
                 console.log(err);
                 return res.status(401).json("Invalid token structure");
@@ -36,8 +35,8 @@ export default function (supabase) {
                 .from('portfolio')
                 .select('*')
                 .eq('username', username);
-            console.log(username)
-            return res.status(200).json(data);
+            
+            return res.status(200).json(data[0]);
         } catch (err) {
             return res.status(501).json(err);
         }

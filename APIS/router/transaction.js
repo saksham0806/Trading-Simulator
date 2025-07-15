@@ -1,6 +1,5 @@
 import express from "express";
 import jwt from "jsonwebtoken";
-import { useParams } from "react-router-dom";
 
 const JWT_SECRET_KEY = "my secret key";
 const REFRESH_TOKEN_KEY = "refresh key";
@@ -9,6 +8,7 @@ export default function (supabase) {
     const transaction = express.Router();
 
     transaction.post("/buy", async (req, res) => {
+        1
         let { accesstoken, stockname, quantity } = req.body;
         const api = await fetch(`http://localhost:3000/prices/${stockname}/`)
         const result = await api.json();
@@ -18,20 +18,20 @@ export default function (supabase) {
         let username = ""
         stockname = stockname.toLowerCase();
         console.log(`Proccessing buy for ${stockname}`);
-        
+
         jwt.verify(accesstoken, JWT_SECRET_KEY, (err, user) => {
             if (err) {
                 res.status(401).json("User not valid")
             }
             username = user.user
-            
+            console.log(username);
+
         })
-        
         const fetchdb = async () => {
             const { data, error } = await supabase.from("portfolio")
-            .select(`${stockname},balance`)
-            .eq('username', username);
-            
+                .select(`${stockname},balance`)
+                .eq('username', username);
+
             if (error) {
                 res.status(404).json("user not valid or stockname not valid")
             }
@@ -41,32 +41,55 @@ export default function (supabase) {
             }
         }
         await fetchdb();
-        
+
         let costToUser = currentprice * quantity;
         console.log(costToUser)
         if (Number(costToUser) > Number(balance)) {
             res.send("insufficient balance");
         } else {
-            
+
             const { data, error } = await supabase
-            .from('portfolio')
-            .update({
-                [stockname.toLowerCase()]: currentStockAmt + quantity,
-                balance: Number(balance) - Number(costToUser)
-            })
-            .eq('username', username);
-            
+                .from('portfolio')
+                .update({
+                    [stockname.toLowerCase()]: currentStockAmt + quantity,
+                    balance: Number(balance) - Number(costToUser)
+                })
+                .eq('username', username);
+            const { data2, error2 } = await supabase
+                .from("history")
+                .select("transaction")
+                .eq('username', username);
+            let toPush = {};
+            console.log(data2)
+            // if(data2){
+                // let update = JSON.parse(data2);
+                // console.log(update);
+                // update.push({ "stockname": stockname, "quantity": quantity, "action": "buy" });
+                // toPush = JSON.stringify(update);
+                // console.log(update);
+            // }
+            // else{
+            //     toPush = { "stockname": stockname, "quantity": quantity, "action": "buy" };
+            // }
+            const { data3, error3 } = await supabase
+                .from("history")
+                .update({
+                    transaction: toPush
+                }
+                )
+                .eq("username",username);
+
             if (error) {
-                res.status(404).json(err)
+                res.status(404).json(error)
             } else {
                 res.status(200).json("successfully bought stocks")
             }
         }
-        
+
     });
-    
-    
-    
+
+
+
     transaction.post("/sell", async (req, res) => {
         let { accesstoken, stockname, quantity } = req.body;
         const api = await fetch(`http://localhost:3000/prices/${stockname}/`)
