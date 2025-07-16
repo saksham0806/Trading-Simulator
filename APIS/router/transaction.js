@@ -1,3 +1,4 @@
+import { isArray } from "chart.js/helpers";
 import express from "express";
 import jwt from "jsonwebtoken";
 
@@ -55,29 +56,48 @@ export default function (supabase) {
                     balance: Number(balance) - Number(costToUser)
                 })
                 .eq('username', username);
-            const { data2, error2 } = await supabase
-                .from("history")
-                .select("transaction")
+
+            let { data: history, error2 } = await supabase
+                .from('history')
+                .select('transaction')
                 .eq('username', username);
-            let toPush = {};
-            console.log(data2)
-            // if(data2){
-                // let update = JSON.parse(data2);
-                // console.log(update);
-                // update.push({ "stockname": stockname, "quantity": quantity, "action": "buy" });
-                // toPush = JSON.stringify(update);
-                // console.log(update);
-            // }
-            // else{
-            //     toPush = { "stockname": stockname, "quantity": quantity, "action": "buy" };
-            // }
-            const { data3, error3 } = await supabase
+
+            if (error2) throw error2;
+            if (!history || history.length === 0) {
+                const initialTransaction = [{ stockname, quantity, action: "buy" }];
+                const { data3, error3 } = await supabase
+                    .from("history")
+                    .insert({
+                        username: username,
+                        transaction: initialTransaction
+                    });
+                if (error3) throw error3;
+                return;
+            }
+
+            let existingTransactions = history[0].transaction;
+
+            if (typeof existingTransactions === 'string') {
+                try {
+                    existingTransactions = JSON.parse(existingTransactions);
+                } catch (e) {
+                    existingTransactions = [];
+                }
+            }
+            if (!Array.isArray(existingTransactions)) {
+                existingTransactions = existingTransactions ? [existingTransactions] : [];
+            }
+
+            existingTransactions.push({ stockname, quantity, action: "buy" });
+
+            const { data4, error4 } = await supabase
                 .from("history")
                 .update({
-                    transaction: toPush
-                }
-                )
-                .eq("username",username);
+                    transaction: existingTransactions  // Send as array, Supabase will handle serialization
+                })
+                .eq("username", username);
+
+            if (error4) throw error4;
 
             if (error) {
                 res.status(404).json(error)
@@ -135,6 +155,48 @@ export default function (supabase) {
                     balance: Number(balance) + Number(capitalGain)
                 })
                 .eq('username', username);
+
+                let { data: history, error2 } = await supabase
+                .from('history')
+                .select('transaction')
+                .eq('username', username);
+
+            if (error2) throw error2;
+            if (!history || history.length === 0) {
+                const initialTransaction = [{ stockname, quantity, action: "buy" }];
+                const { data3, error3 } = await supabase
+                    .from("history")
+                    .insert({
+                        username: username,
+                        transaction: initialTransaction
+                    });
+                if (error3) throw error3;
+                return;
+            }
+
+            let existingTransactions = history[0].transaction;
+
+            if (typeof existingTransactions === 'string') {
+                try {
+                    existingTransactions = JSON.parse(existingTransactions);
+                } catch (e) {
+                    existingTransactions = [];
+                }
+            }
+            if (!Array.isArray(existingTransactions)) {
+                existingTransactions = existingTransactions ? [existingTransactions] : [];
+            }
+
+            existingTransactions.push({ stockname, quantity, action: "sell" });
+
+            const { data4, error4 } = await supabase
+                .from("history")
+                .update({
+                    transaction: existingTransactions  // Send as array, Supabase will handle serialization
+                })
+                .eq("username", username);
+
+            if (error4) throw error4;
 
             if (error) {
                 res.status(404).json(err)
