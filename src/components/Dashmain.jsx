@@ -9,9 +9,9 @@ function Dashmain() {
     let symbols = ["IBM", "NVDA", "GOOG", "NDAQ", "META", "AMD", "INTC", "MSFT", "AMZN", "AAPL", "TSLA"];
 
     const dispatch = useDispatch();
-    const accessToken  = useSelector(state => state.auth.accesstoken);
+    // const accessToken  = useSelector(state => state.auth.accesstoken);
     // console.log(accessToken);
-    // let accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZHNhIiwicGFzcyI6ImRzYSIsImlhdCI6MTc1MDI1NzYyMH0.TKOw_YiGUZ0tWId8uk7nt2UX4pDAEt2ccSL0qu_Z_kM";
+    let accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYXNkIiwiaWF0IjoxNzUyNzI0NTMwfQ.xpVKCT5SCReT15ooYkrjbgCuMK4c09payshkckOJsNw";
     const [userData, setUserData] = useState(null);
     const [userBalance, setUserBalance] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -132,8 +132,8 @@ function Dashmain() {
                         <tbody>
 
                             {
-                                tableData.map((item) => (
-                                    <tr onClick={()=>{handleStockClick(item.stock)}}>
+                                tableData.map((item,index) => (
+                                    <tr key={index} onClick={()=>{handleStockClick(item.stock)}}>
                                         <td>{item.stock}</td>
                                         <td>{item.quantity}</td>
                                         <td>{item.price}</td>

@@ -35,9 +35,10 @@ function Navbar(props) {
                             {/* <li><a href="#features">Features</a></li>
                             <li><a href="#about">About</a></li>
                             <li><a href="#contact">Contact</a></li> */}
-                            <li><Link to="/buysell">Transact</Link></li>
-                            <li><Link to="/dash">Dashboard</Link></li>
                             <li><Link to="/stock/IBM">Stocks</Link></li>
+                            <li><Link to="/dash">Dashboard</Link></li>
+                            <li><Link to="/buysell">Transact</Link></li>
+                            <li><Link to="/history">History</Link></li>
                             <li><Link to="/login"  className="lbtn btn" onClick={()=>{logout()}}>Logout</Link></li>
                         </ul>
                     </nav>
