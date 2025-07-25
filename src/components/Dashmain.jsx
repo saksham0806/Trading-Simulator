@@ -9,9 +9,9 @@ function Dashmain() {
     let symbols = ["IBM", "NVDA", "GOOG", "NDAQ", "META", "AMD", "INTC", "MSFT", "AMZN", "AAPL", "TSLA"];
 
     const dispatch = useDispatch();
-    // const accessToken  = useSelector(state => state.auth.accesstoken);
+    const accessToken  = useSelector(state => state.auth.accesstoken);
     // console.log(accessToken);
-    let accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYXNkIiwiaWF0IjoxNzUyNzI0NTMwfQ.xpVKCT5SCReT15ooYkrjbgCuMK4c09payshkckOJsNw";
+    // let accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYXNkIiwiaWF0IjoxNzUyNzI0NTMwfQ.xpVKCT5SCReT15ooYkrjbgCuMK4c09payshkckOJsNw";
     const [userData, setUserData] = useState(null);
     const [userBalance, setUserBalance] = useState(0);
     const [loading, setLoading] = useState(true);
