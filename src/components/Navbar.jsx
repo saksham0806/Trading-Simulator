@@ -5,6 +5,7 @@ import { loginUser, logout } from "../redux/auth/auth";
 
 
 function Navbar(props) {
+    const dispatch = useDispatch(); // Add this line
 
     if (props.logstatus == '1') {
 
@@ -39,7 +40,15 @@ function Navbar(props) {
                             <li><Link to="/dash">Dashboard</Link></li>
                             <li><Link to="/buysell">Transact</Link></li>
                             <li><Link to="/history">History</Link></li>
-                            <li><Link to="/login"  className="lbtn btn" onClick={()=>{logout()}}>Logout</Link></li>
+                            <li>
+                                <Link
+                                    to="/login"
+                                    className="lbtn btn"
+                                    onClick={() => { dispatch(logout()); }}
+                                >
+                                    Logout
+                                </Link>
+                            </li>
                         </ul>
                     </nav>
                 </div>

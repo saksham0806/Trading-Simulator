@@ -26,8 +26,8 @@ function formattedTime(timestamp) {
     return `${year}-${month}-${day} ${hour}:${min}:${sec}`;
 }
 
-let today = formattedDate(Date.now() - 1 * (60 * 60 * 24 * 1000));
-let yesterday = formattedDate(Date.now() - 2 * (60 * 60 * 24 * 1000));
+let today = formattedDate(Date.now() - 0 * (60 * 60 * 24 * 1000));
+let yesterday = formattedDate(Date.now() - 1 * (60 * 60 * 24 * 1000));
 
 console.log()
 
@@ -53,10 +53,13 @@ async function sendPrices(symbol) {
         prices.push(stockPrices[i]['c']);
         times.push(formattedTime(stockPrices[i]['t']));
     }
-    let currPrice = prices[0];
-
+    
     times.reverse();
     prices.reverse();
+    let currPrice = prices[0];
+    times.reverse();
+    prices.reverse();
+
     console.log(currPrice);
 
     let prices1 = prices.slice(0, 12);

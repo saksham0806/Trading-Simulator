@@ -17,6 +17,7 @@ function LoginComponent() {
         }
     )
     const [t, sett] = useState("");
+    const [errorMsg, setErrorMsg] = useState(""); // Add error message state
 
     function handlechange(e) {
         setformdata({
@@ -27,6 +28,7 @@ function LoginComponent() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setErrorMsg(""); // Reset error message
         try {
             let res = await fetch("http://localhost:3000/auth/login", {
                 method: "POST",
@@ -37,15 +39,21 @@ function LoginComponent() {
             });
 
             if (!res.ok) {
-                throw new Error(`HTTP error! status: ${res.status}`);
+                setErrorMsg("Invalid username or password");
+                const container = document.getElementById("loginContainer");
+                container.classList.add("shake");
+                setTimeout(() => {
+                    container.classList.remove("shake");
+                }, 500);
+                return;
             }
             const data = await res.json();
 
-            // Dispatch with correct payload format
             dispatch(loginUser({ accesstoken: data.accessToken }));
 
             Navigate("/dash");
         } catch (error) {
+            setErrorMsg("Invalid username or password"); // Show error on network/fetch error
             console.error("Error:", error);
         }
     };
@@ -55,16 +63,27 @@ function LoginComponent() {
                 <h1>Demo Trading Login</h1>
                 <form id="loginForm" onSubmit={handleSubmit}>
                     <div className="input-group">
-                        <label for="username" className="labelclass">Username:</label>
+                        <label htmlFor="username" className="labelclass">Username:</label>
                         <input className="authinput" type="text" id="username" name="username" required onChange={handlechange}></input>
                     </div>
                     <div className="input-group">
-                        <label for="password" className="labelclass">Password:</label>
+                        <label htmlFor="password" className="labelclass">Password:</label>
                         <input className="authinput" type="password" id="password" name="password" required onChange={handlechange}></input>
                     </div>
                     <button className="authbutton" type="submit">Login</button>
                 </form>
-                <p id="error-message" className="error-message"></p>
+                {errorMsg && (
+                    <p id="error-message" className="error-message" style={{ display: "block" }}>{errorMsg}</p>
+                )}
+                <p style={{ marginTop: "20px", color: "#555" }}>
+                    Not a user?{" "}
+                    <span
+                        style={{ color: "#007bff", cursor: "pointer", textDecoration: "underline" }}
+                        onClick={() => Navigate("/register")}
+                    >
+                        Register here
+                    </span>
+                </p>
             </div>
         </div>
     );
