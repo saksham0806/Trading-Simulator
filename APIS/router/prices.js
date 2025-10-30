@@ -1,10 +1,10 @@
 import express from "express";
-let polygon_api_key = "	zzH6soyGbzA0COmbNxpJpC9xt8RlfrJR";
+import "dotenv/config"
+
+let polygon_api_key = process.env.POLYGON_API_KEY;
+console.log(polygon_api_key)
 let symbols = ["IBM", "NVDA", "GOOG", "NDAQ", "META", "AMD", "INTC", "MSFT", "AMZN", "AAPL", "TSLA"];
 
-// let key = "d1bb3a1r01qsbpububo0d1bb3a1r01qsbpububog";
-// let alpaca = "PKN0V6BWX95M9TCR9ZGL"
-// let apikey = "S9THLB3PV4TUWGPA";
 
 function formattedDate(timestamp) {
     const date = new Date(timestamp);
