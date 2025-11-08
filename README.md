@@ -5,6 +5,15 @@ This project is designed to help beginners understand trading dynamics through a
 
 ---
 
+## Demo
+
+> 📽️ *Click below to view a short demo of the project in action.*
+
+![Trading Simulator Demo](./readme_data/demo.gif)
+
+
+---
+
 ## Features
 
 - **Real-Time Trading Simulation** – Users can buy/sell simulated stocks and track their virtual portfolio.
@@ -15,15 +24,7 @@ This project is designed to help beginners understand trading dynamics through a
 
 ---
 
-## Demo
 
-> 📽️ *Click below to view a short demo of the project in action.*
-
-[![Trading Simulator Demo](https://img.shields.io/badge/▶️-Watch%20Demo-blue?style=for-the-badge)](./readme_data/Trading_sim.webm)
-
-> *(Replace `./demo/demo-video.webm` with the actual path to your `.webm` file once uploaded.)*
-
----
 
 #🛠️ Tech Stack
 

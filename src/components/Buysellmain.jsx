@@ -11,8 +11,9 @@ function Buysellmain() {
         quantity: 1
     })
     
-    // Add new state for message
+    // Add new state for message and loading flag
     const [message, setMessage] = useState("");
+    const [loading, setLoading] = useState(false);
 
     function handlechange(e) {
         setformdata({
@@ -25,6 +26,9 @@ function Buysellmain() {
 
     async function handlesell(e) {
         e.preventDefault();
+        if (loading) return; // prevent duplicate requests
+        setLoading(true);
+        setMessage(`Selling ${formdata.quantity} shares of ${formdata.stockname}...`); // immediate feedback
         try{
             let res = await fetch("http://localhost:3000/transaction/sell",
                 {
@@ -37,7 +41,8 @@ function Buysellmain() {
             )
     
             if (!res.ok) {
-                throw new Error(`HTTP error! status: ${res.status}`);
+                const text = await res.text().catch(()=>res.statusText);
+                throw new Error(text || `HTTP error! status: ${res.status}`);
             }
             const data = await res.json();
             setMessage(`Successfully sold ${formdata.quantity} shares of ${formdata.stockname}`);
@@ -45,11 +50,16 @@ function Buysellmain() {
         }catch(err){
             setMessage(`Error: ${err.message}`);
             console.error("Error:", err);
+        } finally {
+            setLoading(false);
         }
     }
 
     async function handlebuy(e) {
         e.preventDefault();
+        if (loading) return; // prevent duplicate requests
+        setLoading(true);
+        setMessage(`Buying ${formdata.quantity} shares of ${formdata.stockname}...`); // immediate feedback
         try{
             let res = await fetch("http://localhost:3000/transaction/buy",
                 {
@@ -62,7 +72,8 @@ function Buysellmain() {
             )
     
             if (!res.ok) {
-                throw new Error(`HTTP error! status: ${res.status}`);
+                const text = await res.text().catch(()=>res.statusText);
+                throw new Error(text || `HTTP error! status: ${res.status}`);
             }
             const data = await res.json();
             setMessage(`Successfully bought ${formdata.quantity} shares of ${formdata.stockname}`);
@@ -70,6 +81,8 @@ function Buysellmain() {
         }catch(err){
             setMessage(`Error: ${err.message}`);
             console.error("Error:", err);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -77,8 +90,8 @@ function Buysellmain() {
         <div className="Buysellmain">
             <h1>Stock Trading Platform</h1>
 
-            <div class="form-group">
-                <label for="stockSelect">Select Stock:</label>
+            <div className="form-group">
+                <label htmlFor="stockSelect">Select Stock:</label>
                 <select id="stockSelect" name="stockname" onChange={handlechange}>
                     <option value="">-- Select a stock --</option>
                     <option value="IBM">IBM</option>
@@ -107,12 +120,16 @@ function Buysellmain() {
                 />
             </div>
 
-            <div class="button-group">
-                <button id="buyBtn" onClick={handlebuy}>Buy</button>
-                <button id="sellBtn" onClick={handlesell}>Sell</button>
+            <div className="button-group">
+                <button id="buyBtn" onClick={handlebuy} disabled={loading}>
+                    {loading ? (message.startsWith("Buying") ? "Buying..." : "Processing...") : "Buy"}
+                </button>
+                <button id="sellBtn" onClick={handlesell} disabled={loading}>
+                    {loading ? (message.startsWith("Selling") ? "Selling..." : "Processing...") : "Sell"}
+                </button>
             </div>
 
-            <div id="resultMessage" className="result">
+            <div id="resultMessage" className="result" aria-live="polite">
                 {message && <p>{message}</p>}
             </div>
         </div>
