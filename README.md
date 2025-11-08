@@ -1,12 +1,59 @@
-# React + Vite
+# Trading Simulator Web App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack **real-time trading simulation platform** that allows users to practice stock trading with live market-like data — without risking real money.  
+This project is designed to help beginners understand trading dynamics through an interactive and responsive web interface.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- **Real-Time Trading Simulation** – Users can buy/sell simulated stocks and track their virtual portfolio.
+- **Secure Authentication** – Implemented using **Express sessions** and **JWT** for user protection.
+- **Persistent Data Storage** – Managed user data and transactions using **PostgreSQL** on **Supabase**.
+- **Live Data Updates** – Powered by **WebSockets** for instant updates on trade actions and stock prices.
+- **Modern UI/UX** – Built with **React Hooks** and styled using **Tailwind CSS** for a responsive and clean design.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## Demo
+
+> 📽️ *Click below to view a short demo of the project in action.*
+
+[![Trading Simulator Demo](https://img.shields.io/badge/▶️-Watch%20Demo-blue?style=for-the-badge)](./readme_data/Trading_sim.webm)
+
+> *(Replace `./demo/demo-video.webm` with the actual path to your `.webm` file once uploaded.)*
+
+---
+
+#🛠️ Tech Stack
+
+| Layer | Technology |
+|:------|:------------|
+| **Frontend** | React, Tailwind CSS, WebSockets |
+| **Backend** | Node.js, Express.js |
+| **Database** | PostgreSQL (hosted on Supabase) |
+| **Auth** | JWT + Express Session |
+|  |
+
+---
+
+## ⚙️ Installation & Setup
+
+Follow these steps to set up the project locally:
+
+```bash
+# Clone the repository
+git clone https://github.com/saksham0806/Trading-Simulator.git
+cd trading-simulator-webapp
+
+# Install dependencies
+npm install
+
+# Add environment variables
+# Create a .env file in the root directory and include:
+# DATABASE_URL=your_supabase_postgres_url
+# JWT_SECRET=your_secret_key
+
+# Start the development server
+npm run dev
+cd APIS && nodemon index.js

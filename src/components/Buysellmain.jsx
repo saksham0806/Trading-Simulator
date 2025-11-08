@@ -3,14 +3,16 @@ import { useSelector } from "react-redux";
 import "./Buysellmain.css"
 
 function Buysellmain() {
-
     const {accesstoken} = useSelector(state => state.auth);
-
+    
     const [formdata, setformdata] = useState({
         accesstoken: accesstoken,
         stockname: "",
-        quantity: 1  // Changed default to 1 instead of 0
+        quantity: 1
     })
+    
+    // Add new state for message
+    const [message, setMessage] = useState("");
 
     function handlechange(e) {
         setformdata({
@@ -38,12 +40,14 @@ function Buysellmain() {
                 throw new Error(`HTTP error! status: ${res.status}`);
             }
             const data = await res.json();
+            setMessage(`Successfully sold ${formdata.quantity} shares of ${formdata.stockname}`);
             console.log("Success:", data);
         }catch(err){
+            setMessage(`Error: ${err.message}`);
             console.error("Error:", err);
         }
-
     }
+
     async function handlebuy(e) {
         e.preventDefault();
         try{
@@ -58,14 +62,15 @@ function Buysellmain() {
             )
     
             if (!res.ok) {
-                throw new Error(`HTTP error! status: ${res.status} \n ${res.json()}`);
+                throw new Error(`HTTP error! status: ${res.status}`);
             }
             const data = await res.json();
+            setMessage(`Successfully bought ${formdata.quantity} shares of ${formdata.stockname}`);
             console.log("Success:", data);
         }catch(err){
+            setMessage(`Error: ${err.message}`);
             console.error("Error:", err);
         }
-
     }
 
     return (
@@ -107,7 +112,9 @@ function Buysellmain() {
                 <button id="sellBtn" onClick={handlesell}>Sell</button>
             </div>
 
-            <div id="resultMessage" class="result"></div>
+            <div id="resultMessage" className="result">
+                {message && <p>{message}</p>}
+            </div>
         </div>
     )
 }

@@ -5,8 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 function Historymain() {
-    // const { accesstoken } = useSelector(state => state.auth);
-    let accesstoken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYXNkIiwiaWF0IjoxNzUyNzI0NTMwfQ.xpVKCT5SCReT15ooYkrjbgCuMK4c09payshkckOJsNw";
+    const { accesstoken } = useSelector(state => state.auth);
     const [table, settable] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);

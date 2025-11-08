@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import "./Signinup.css";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser, logout } from "../redux/auth/auth";
@@ -9,6 +9,7 @@ function LoginComponent() {
 
     const Navigate = useNavigate();
     const dispatch = useDispatch();
+    const [searchParams] = useSearchParams();
 
     const [formdata, setformdata] = useState(
         {
@@ -18,6 +19,17 @@ function LoginComponent() {
     )
     const [t, sett] = useState("");
     const [errorMsg, setErrorMsg] = useState(""); // Add error message state
+    const [successMsg, setSuccessMsg] = useState(""); // Add success message state
+
+    useEffect(() => {
+        // Check for success message in URL params
+        const success = searchParams.get('registered');
+        if (success === 'true') {
+            setSuccessMsg('User successfully registered! Please login.');
+            // Clear the message after 5 seconds
+            setTimeout(() => setSuccessMsg(''), 5000);
+        }
+    }, [searchParams]);
 
     function handlechange(e) {
         setformdata({
@@ -61,6 +73,9 @@ function LoginComponent() {
         <div className="authbody">
             <div className="login-container" id="loginContainer">
                 <h1>Demo Trading Login</h1>
+                {successMsg && (
+                    <p className="success-message">{successMsg}</p>
+                )}
                 <form id="loginForm" onSubmit={handleSubmit}>
                     <div className="input-group">
                         <label htmlFor="username" className="labelclass">Username:</label>

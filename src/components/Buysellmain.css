@@ -54,9 +54,13 @@ button {
 }
 .result {
     margin-top: 20px;
-    padding: 15px;
-    border-radius: 4px;
-    display: none;
+    padding: 10px;
+    text-align: center;
+}
+.result p {
+    margin: 0;
+    color: #2c5282;
+    font-weight: bold;
 }
 .success {
     background-color: #dff0d8;
