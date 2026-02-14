@@ -13,6 +13,7 @@ dist-ssr
 *.local
 myenv/
 __pycache__/
+API/__pycache__
 .env
 
 *.env
