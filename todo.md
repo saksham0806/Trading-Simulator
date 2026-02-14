@@ -1,4 +1,5 @@
  - Create user management system
  - Create price fetching api
+ - price fetch table inside db to reduce rows
  - create transaction api
  - 
