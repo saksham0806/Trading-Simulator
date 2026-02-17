@@ -1,5 +1,5 @@
- - Create user management system
+ - Create user management system (crypto)
  - Create price fetching api
  - price fetch table inside db to reduce rows
  - create transaction api
- - 
+ - implement user transaction history

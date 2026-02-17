@@ -20,3 +20,7 @@ class User(Base):
 class Stockprices(Base):
     __tablename__ = "stockprices"
     symbol = Column(String,unique=True,primary_key=True)
+    max_prices = Column(Float)
+    max_prices = Column(Float)
+    max_prices = Column(Float)
+    max_prices = Column(Float)
