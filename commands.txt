@@ -1,0 +1,5 @@
+
+enter db -                  exec - psql -h localhost -p 5432 -U admin -d postgres
+
+db migration update -       alembic revision --autogenerate -m ""
+db migration update -       alembic upgrade head

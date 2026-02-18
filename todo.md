@@ -8,7 +8,7 @@
 
 ## Non functional objectives
 
- - create tables for db
- - add relations in db
+ - ~~create tables for db~~
+ - ~~add relations in db~~
  - create price fetcher and processor api
- 
+ - update models.py
