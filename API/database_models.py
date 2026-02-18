@@ -39,6 +39,7 @@ class transactions(Base):
 
 class holdings(Base):
     __tablename__ = "holdings"
+    holdings_id = Column(UUID(as_uuid=True),primary_key=True,default=uuid.uuid4)
     uuid = Column(UUID(as_uuid=True))
     symbol = Column(String)
     quantity = Column(Integer)
