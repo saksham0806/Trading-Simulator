@@ -15,8 +15,11 @@ myenv/
 __pycache__/
 API/__pycache__
 .env
-
 *.env
+
+test.json
+test.py
+
 
 # Editor directories and files
 .vscode/*

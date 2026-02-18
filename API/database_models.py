@@ -1,7 +1,7 @@
 import uuid
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, Float, String
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, Integer, Float, String, DATE
+from sqlalchemy.dialects.postgresql import UUID, ARRAY
 
 Base = declarative_base()
 
@@ -20,7 +20,30 @@ class User(Base):
 class Stockprices(Base):
     __tablename__ = "stockprices"
     symbol = Column(String,unique=True,primary_key=True)
-    max_prices = Column(Float)
-    max_prices = Column(Float)
-    max_prices = Column(Float)
-    max_prices = Column(Float)
+    curr_prices = Column(Float)
+    max_prices_24 = Column(Float)
+    min_prices_24 = Column(Float)
+    max_prices_1 = Column(Float)
+    min_prices_1 = Column(Float)
+    prices = Column(ARRAY(Float))
+    times = Column(ARRAY(Float))
+
+class transactions(Base):
+    __tablename__ = "transactions"
+    transaction_id = Column(UUID(as_uuid=True),primary_key=True,default=uuid.uuid4)
+    uuid = Column(UUID(as_uuid=True))
+    symbol = Column(String)
+    quantity = Column(Integer)
+    action = Column(String)
+    transaction_date = Column(DATE)
+
+class holdings(Base):
+    __tablename__ = "holdings"
+    uuid = Column(UUID(as_uuid=True))
+    symbol = Column(String)
+    quantity = Column(Integer)
+
+    
+
+
+
