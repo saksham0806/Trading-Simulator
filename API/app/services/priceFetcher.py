@@ -31,7 +31,7 @@ def process_api(res):
     return maxprice1, minprice1, maxPrice24, minPrice24, currPrice, changedifference, changepercentage, prices, times
 
 
-def get_prices(symbol):
+def get_prices(symbol: str, yesterday:str = yesterday, today: str = today):
     url = (
     f"https://api.massive.com/v2/aggs/ticker/{symbol}/range/1/minute/{yesterday}/{today}"
     f"?adjusted=true&sort=asc&limit=50000&apiKey={MASSIVE_API_KEY}"
