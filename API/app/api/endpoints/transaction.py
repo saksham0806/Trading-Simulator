@@ -1,5 +1,7 @@
 import jwt
 from dotenv import load_dotenv
+from database import session, engine
+import database_models
 
 key = "asdsdgaagfwrhasethbesfhbfdehbedhbserghbesyhxbfrthbtersdghbezadshbeadhb"
 test = {
@@ -13,7 +15,7 @@ print(encoded)
 
 decoded = jwt.decode(encoded,key,algorithms="HS256")
 
-print(decoded[])
+print(decoded)
 
 
 
