@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from database import session, engine
 import database_models
 
-key = "asdsdgaagfwrhasethbesfhbfdehbedhbserghbesyhxbfrthbtersdghbezadshbeadhb"
+key = "asdsdgaagfwrhasethbesfhbfdedgsfhfdfgsarsadfsgdhfdgshbedhbserghbesyhxbfrthbtersdghbezadshbeadhb"
 test = {
     "username" : "asd",
     "password" : "asd"
